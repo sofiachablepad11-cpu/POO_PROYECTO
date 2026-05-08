@@ -6,6 +6,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.time.LocalDate;
+
 import javax.swing.SwingConstants;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
@@ -17,6 +19,10 @@ public class GUI_REGISTRO_DE_MOVIMIENTO extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField text_monto;
+	private JComboBox comboBox_DIA;
+    private JComboBox comboBox_MES;
+    private JComboBox comboBox_AÑO;
+    LocalDate hoy = LocalDate.now();
 
 	/**
 	 * Launch the application.
@@ -81,16 +87,19 @@ public class GUI_REGISTRO_DE_MOVIMIENTO extends JFrame {
 		
 		JComboBox comboBox_DIA = new JComboBox();
 		comboBox_DIA.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"}));
+		comboBox_DIA.setSelectedIndex(hoy.getDayOfMonth() - 1);
 		comboBox_DIA.setBounds(10, 123, 242, 20);
 		contentPane.add(comboBox_DIA);
 		
 		JComboBox comboBox_MES = new JComboBox();
 		comboBox_MES.setModel(new DefaultComboBoxModel(new String[] {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"}));
+		comboBox_MES.setSelectedIndex(hoy.getMonthValue() - 1);
 		comboBox_MES.setBounds(10, 153, 242, 20);
 		contentPane.add(comboBox_MES);
 		
 		JComboBox comboBox_AÑO = new JComboBox();
 		comboBox_AÑO.setModel(new DefaultComboBoxModel(new String[] {"2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", "2034", "2035"}));
+		comboBox_AÑO.setSelectedItem(String.valueOf(hoy.getYear()));
 		comboBox_AÑO.setBounds(10, 183, 242, 20);
 		contentPane.add(comboBox_AÑO);
 		
