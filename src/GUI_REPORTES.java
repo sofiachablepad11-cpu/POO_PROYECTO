@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.awt.event.ActionEvent;
 import javax.swing.JTabbedPane;
 
@@ -19,6 +20,9 @@ public class GUI_REPORTES extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JComboBox comboBox_MES;
+    private JComboBox comboBox_AÑO;
+    LocalDate hoy = LocalDate.now();
 
 	/**
 	 * Launch the application.
@@ -55,6 +59,7 @@ public class GUI_REPORTES extends JFrame {
 		
 		JComboBox comboBox_MES = new JComboBox();
 		comboBox_MES.setModel(new DefaultComboBoxModel(new String[] {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO ", "SEPTIEMBRE", "NOVIEMBRE", "DICIEMBRE"}));
+		comboBox_MES.setSelectedIndex(hoy.getMonthValue() - 1);
 		comboBox_MES.setBounds(135, 56, 113, 20);
 		contentPane.add(comboBox_MES);
 		
@@ -72,6 +77,7 @@ public class GUI_REPORTES extends JFrame {
 		
 		JComboBox comboBox_AÑO = new JComboBox();
 		comboBox_AÑO.setModel(new DefaultComboBoxModel(new String[] {"2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", "2034", "2035"}));
+		comboBox_AÑO.setSelectedItem(String.valueOf(hoy.getYear()));
 		comboBox_AÑO.setBounds(135, 79, 113, 20);
 		contentPane.add(comboBox_AÑO);
 		
