@@ -1,3 +1,5 @@
+
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -8,11 +10,16 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JList;
 import javax.swing.JButton;
+import javax.swing.JTable;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class GUI_ALARMAS extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JTable table;
+	private String cod_use;
 
 	/**
 	 * Launch the application.
@@ -34,41 +41,58 @@ public class GUI_ALARMAS extends JFrame {
 	 * Create the frame.
 	 */
 	public GUI_ALARMAS() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JLabel lbl_titulo = new JLabel("ALERTAS");
-		lbl_titulo.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_titulo.setFont(new Font("Tahoma", Font.BOLD, 10));
-		lbl_titulo.setBounds(10, 10, 416, 12);
-		contentPane.add(lbl_titulo);
-		
-		JLabel lbl_gastos = new JLabel("MENSAJE GENERAL");
-		lbl_gastos.setHorizontalAlignment(SwingConstants.LEFT);
-		lbl_gastos.setFont(new Font("Tahoma", Font.BOLD, 10));
-		lbl_gastos.setBounds(10, 32, 113, 13);
-		contentPane.add(lbl_gastos);
-		
-		JLabel lbl_tot_gastos = new JLabel(".");
-		lbl_tot_gastos.setBounds(135, 32, 291, 12);
-		contentPane.add(lbl_tot_gastos);
-		
-		JList list = new JList();
-		list.setBounds(10, 62, 416, 128);
-		contentPane.add(list);
-		
-		JButton btn_leidas = new JButton("MARCAR COMO LEIDAS");
-		btn_leidas.setBounds(10, 202, 416, 20);
-		contentPane.add(btn_leidas);
-		
-		JButton btn_volver = new JButton("VOLVER AL INICIO");
-		btn_volver.setBounds(10, 233, 416, 20);
-		contentPane.add(btn_volver);
+		setTitle("AHORRA YA!");
+        setSize(350, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
 
+        JPanel fondo = new JPanel();
+        fondo.setBackground(new Color(230, 235, 240)); 
+        fondo.setLayout(null);
+        setContentPane(fondo);
+        JPanel card = new JPanel();
+        card.setBackground(Color.WHITE);
+        card.setBounds(10, 11, 315, 539);
+        fondo.add(card);
+        card.setLayout(null);
+        
+        JLabel lblAlertas = new JLabel("ALERTAS");
+        lblAlertas.setBounds(114, 31, 112, 14);
+        lblAlertas.setFont(new Font("Tahoma", Font.BOLD, 14));
+        card.add(lblAlertas);
+        
+        JLabel lblNewLabel = new JLabel("Notificaciones");
+        lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
+        lblNewLabel.setBounds(10, 74, 129, 14);
+        card.add(lblNewLabel);
+        
+        table = new JTable();
+        table.setBounds(10, 100, 295, 215);
+        card.add(table);
+        
+        JButton btnNewButton = new JButton("Marcar como leídas");
+        btnNewButton.setBounds(10, 346, 295, 28);
+        btnNewButton.setBackground(new Color(52, 152, 219)); 
+        btnNewButton.setForeground(Color.WHITE);
+        btnNewButton.setFocusPainted(false);
+        btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 12));
+        card.add(btnNewButton);
+        
+        JButton btnVolverAlInicio = new JButton("Volver al inicio");
+        btnVolverAlInicio.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		GUI_PANTALLA_PRINCIPAL PRE = new GUI_PANTALLA_PRINCIPAL(cod_use);
+				PRE.setVisible(true);
+				dispose();
+        	}
+        });
+        btnVolverAlInicio.setBounds(10, 396, 295, 28); 
+        btnVolverAlInicio.setBackground(new Color(231, 76, 60)); 
+        btnVolverAlInicio.setForeground(Color.WHITE);
+        btnVolverAlInicio.setFocusPainted(false);
+        btnVolverAlInicio.setFont(new Font("Tahoma", Font.BOLD, 12));
+        card.add(btnVolverAlInicio);
 	}
 
 }

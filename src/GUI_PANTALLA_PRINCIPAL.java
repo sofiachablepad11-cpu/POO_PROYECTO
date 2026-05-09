@@ -1,17 +1,23 @@
-import java.awt.EventQueue;
 
+import java.awt.Color;
+import java.awt.EventQueue;
+import conec.CONECTA;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class GUI_PANTALLA_PRINCIPAL extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private String cod_use;
 
 	/**
 	 * Launch the application.
@@ -20,7 +26,7 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GUI_PANTALLA_PRINCIPAL frame = new GUI_PANTALLA_PRINCIPAL();
+					GUI_PANTALLA_PRINCIPAL frame = new GUI_PANTALLA_PRINCIPAL("123");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -32,73 +38,174 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public GUI_PANTALLA_PRINCIPAL() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 266, 386);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+	public GUI_PANTALLA_PRINCIPAL(String cod_use) {
+		    this.cod_use= cod_use;
+
+        setTitle("AHORRA YA!");
+        setSize(350, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
+
+        JPanel fondo = new JPanel();
+        fondo.setBackground(new Color(230, 235, 240)); 
+        fondo.setLayout(null);
+        setContentPane(fondo);
+        JPanel card = new JPanel();
+        card.setBackground(Color.WHITE);
+        card.setBounds(10, 11, 315, 539);
+        fondo.add(card);
+        card.setLayout(null);
+        
+        JLabel lblNewLabel = new JLabel("INICIO");
+        lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblNewLabel.setBounds(130, 11, 112, 14);
+        card.add(lblNewLabel);
+        
+        JLabel lblNewLabel_1 = new JLabel("Saldo actual");
+        lblNewLabel_1.setBounds(10, 53, 86, 14);
+        card.add(lblNewLabel_1);
+        
+        JLabel lblsaldo = new JLabel("3,000.00");
+        lblsaldo.setFont(new Font("Tahoma", Font.PLAIN, 28));
+        lblsaldo.setBounds(46, 68, 247, 51);
+        card.add(lblsaldo);
+        
+        JLabel lblNewLabel_3 = new JLabel("$");
+        lblNewLabel_3.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblNewLabel_3.setBounds(20, 78, 18, 34);
+        card.add(lblNewLabel_3);
+        
+        JLabel lblNewLabel_4 = new JLabel("Ingresos:");
+        lblNewLabel_4.setForeground(new Color(0, 153, 51));
+        lblNewLabel_4.setFont(new Font("Tahoma", Font.BOLD, 12));
+        lblNewLabel_4.setBounds(10, 130, 66, 14);
+        card.add(lblNewLabel_4);
+        
+        JLabel lblingreso = new JLabel("$ 1,500");
+        lblingreso.setForeground(new Color(0, 153, 51));
+        lblingreso.setFont(new Font("Tahoma", Font.BOLD, 12));
+        lblingreso.setBounds(72, 130, 71, 14);
+        card.add(lblingreso);
+        
+        JLabel lblNewLabel_4_1 = new JLabel("Gastos:");
+        lblNewLabel_4_1.setForeground(new Color(153, 51, 51));
+        lblNewLabel_4_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+        lblNewLabel_4_1.setBounds(183, 130, 66, 14);
+        card.add(lblNewLabel_4_1);
+        
+        JLabel lblgasto = new JLabel("$ 2,000");
+        lblgasto.setForeground(new Color(153, 51, 51));
+        lblgasto.setFont(new Font("Tahoma", Font.BOLD, 12));
+        lblgasto.setBounds(234, 130, 71, 14);
+        card.add(lblgasto);
+        
+        JButton btningreso = new JButton("Agregar ingreso");
+        btningreso.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		GUI_INGRESOS PRE = new GUI_INGRESOS(cod_use);
+				PRE.setVisible(true);
+
+				
+				dispose();
+        	}
+        });
+        btningreso.setBounds(20, 188, 269, 34);
+        btningreso.setBackground(new Color(52, 152, 219));
+        btningreso.setForeground(Color.WHITE);
+        btningreso.setFocusPainted(false);
+        btningreso.setBorderPainted(false);
+        btningreso.setFont(new Font("Tahoma", Font.BOLD, 12));
+        card.add(btningreso);
+
+        
+        JButton btngasto = new JButton("Agregar gasto");
+        btngasto.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		GUI_GASTO GAS = new GUI_GASTO(cod_use);
+				GAS.setVisible(true);
+
+				
+				dispose();
+        	}
+        });
+        btngasto.setBounds(20, 244, 269, 34);
+        btngasto.setBackground(new Color(52, 152, 219));
+        btngasto.setForeground(Color.WHITE);
+        btngasto.setFocusPainted(false);
+        btngasto.setBorderPainted(false);
+        btngasto.setFont(new Font("Tahoma", Font.BOLD, 12));
+        card.add(btngasto);
+        
+        JButton btnmovimientos = new JButton("Ver movimientos");
+        btnmovimientos.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		GUI_REPORTES REP = new GUI_REPORTES(cod_use);
+				REP.setVisible(true);
+
+				
+				dispose();
+        		
+        	}
+        });
+        btnmovimientos.setBounds(20, 300, 269, 34);
+        btnmovimientos.setBackground(new Color(52, 152, 219));
+        btnmovimientos.setForeground(Color.WHITE);
+        btnmovimientos.setFocusPainted(false);
+        btnmovimientos.setBorderPainted(false);
+        btnmovimientos.setFont(new Font("Tahoma", Font.BOLD, 12));
+        card.add(btnmovimientos);
+        
+        JLabel lblMasOpciones = new JLabel("MAS OPCIONES");
+        lblMasOpciones.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        lblMasOpciones.setBounds(20, 362, 112, 14);
+        card.add(lblMasOpciones);
+        
+        JButton btnpresupuesto = new JButton("Presupuesto");
+        btnpresupuesto.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		GUI_PRESUPUESTO PRE = new GUI_PRESUPUESTO();
+				PRE.setVisible(true);
+				dispose();
+        	}
+        });
+        btnpresupuesto.setBounds(20, 387, 269, 34);
+        btnpresupuesto.setBackground(Color.WHITE);
+        btnpresupuesto.setFocusPainted(false);
+        btnpresupuesto.setBorder(BorderFactory.createLineBorder(new Color(200,200,200)));
+        card.add(btnpresupuesto);
+        
+        JButton btnalertas = new JButton("Alertas");
+        btnalertas.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		GUI_ALARMAS ALA = new GUI_ALARMAS();
+				ALA.setVisible(true);
+
+				
+				dispose();
+        	}
+        });
+        btnalertas.setBounds(20, 438, 269, 34);
+        btnalertas.setBackground(Color.WHITE);
+        btnalertas.setFocusPainted(false);
+        btnalertas.setBorder(BorderFactory.createLineBorder(new Color(200,200,200)));
+        card.add(btnalertas);
+        
+        JButton btncerrar = new JButton("Cerrar Sesion");
+        btncerrar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		GUI_LOGIN login = new GUI_LOGIN();
+				login.setVisible(true);
+				dispose();
+        	}
+        });
+        btncerrar.setBounds(20, 494, 269, 34);
+        btncerrar.setBackground(new Color(233, 30, 99));
+        btncerrar.setForeground(Color.WHITE);
+        btncerrar.setFocusPainted(false);
+        btncerrar.setBorderPainted(false);
+        card.add(btncerrar);
 		
-		JLabel lbl_saldo_actual = new JLabel("SALDO ACTUAL");
-		lbl_saldo_actual.setHorizontalAlignment(SwingConstants.LEFT);
-		lbl_saldo_actual.setFont(new Font("Tahoma", Font.BOLD, 10));
-		lbl_saldo_actual.setBounds(20, 54, 96, 13);
-		contentPane.add(lbl_saldo_actual);
-		
-		JLabel lbl_ingresos = new JLabel("TOTAL DE INGRESOS");
-		lbl_ingresos.setHorizontalAlignment(SwingConstants.LEFT);
-		lbl_ingresos.setFont(new Font("Tahoma", Font.BOLD, 10));
-		lbl_ingresos.setBounds(20, 86, 118, 13);
-		contentPane.add(lbl_ingresos);
-		
-		JLabel lbl_gastos = new JLabel("TOTAL DE GASTOS");
-		lbl_gastos.setHorizontalAlignment(SwingConstants.LEFT);
-		lbl_gastos.setFont(new Font("Tahoma", Font.BOLD, 10));
-		lbl_gastos.setBounds(20, 109, 118, 13);
-		contentPane.add(lbl_gastos);
-		
-		JButton btn_ingreso = new JButton("AGREGAR INGRESO");
-		btn_ingreso.setBounds(20, 145, 214, 20);
-		contentPane.add(btn_ingreso);
-		
-		JButton btn_gasto = new JButton("AGREGAR GASTO");
-		btn_gasto.setBounds(20, 175, 214, 20);
-		contentPane.add(btn_gasto);
-		
-		JButton btn_reporte = new JButton("VER REPORTES");
-		btn_reporte.setBounds(20, 205, 214, 20);
-		contentPane.add(btn_reporte);
-		
-		JButton btn_alertas = new JButton("VER ALERTAS");
-		btn_alertas.setBounds(20, 235, 214, 20);
-		contentPane.add(btn_alertas);
-		
-		JLabel lbl_actual = new JLabel(".");
-		lbl_actual.setBounds(115, 54, 119, 12);
-		contentPane.add(lbl_actual);
-		
-		JLabel lbl_titulo = new JLabel("TITULO");
-		lbl_titulo.setFont(new Font("Tahoma", Font.BOLD, 10));
-		lbl_titulo.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_titulo.setBounds(94, 10, 44, 12);
-		contentPane.add(lbl_titulo);
-		
-		JLabel lbl_tot_ingresos = new JLabel(".");
-		lbl_tot_ingresos.setBounds(145, 86, 89, 12);
-		contentPane.add(lbl_tot_ingresos);
-		
-		JLabel lbl_tot_gastos = new JLabel(".");
-		lbl_tot_gastos.setBounds(145, 109, 97, 12);
-		contentPane.add(lbl_tot_gastos);
-		
-		JButton btn_presupuesto = new JButton("ESTABLECER PRESUPUESTO");
-		btn_presupuesto.setBounds(20, 262, 214, 20);
-		contentPane.add(btn_presupuesto);
-		
-		JButton btn_cerrar = new JButton("CERRAR SESION");
-		btn_cerrar.setBounds(20, 319, 214, 20);
-		contentPane.add(btn_cerrar);
 
 	}
 
