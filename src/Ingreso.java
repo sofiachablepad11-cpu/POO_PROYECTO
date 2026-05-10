@@ -4,19 +4,17 @@ public class Ingreso {
 	 private String ing_codigo;
 	 private String usu_codigo;
 	 private double ing_monto;
-	 private String ing_categoria;
 	 private String ing_descripcion;
 	 private Date ing_fecha;
 	 
 	 public Ingreso() {
 	 }
 
-	 public Ingreso(String ing_codigo, String usu_codigo, double ing_monto, String ing_categoria, String ing_descripcion,
+	 public Ingreso(String ing_codigo, String usu_codigo, double ing_monto, String ing_descripcion,
 			Date ing_fecha) {
 		this.ing_codigo = ing_codigo;
 		this.usu_codigo = usu_codigo;
 		this.ing_monto = ing_monto;
-		this.ing_categoria = ing_categoria;
 		this.ing_descripcion = ing_descripcion;
 		this.ing_fecha = ing_fecha;
 	 }
@@ -43,14 +41,6 @@ public class Ingreso {
 
 	 public void setIng_monto(double ing_monto) {
 		 this.ing_monto = ing_monto;
-	 }
-
-	 public String getIng_categoria() {
-		 return ing_categoria;
-	 }
-
-	 public void setIng_categoria(String ing_categoria) {
-		 this.ing_categoria = ing_categoria;
 	 }
 
 	 public String getIng_descripcion() {
