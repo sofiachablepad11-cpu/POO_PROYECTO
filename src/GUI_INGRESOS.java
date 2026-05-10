@@ -29,15 +29,14 @@ import java.awt.event.ActionEvent;
 public class GUI_INGRESOS extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
 	private JTextField textingreso;
-	private JTable table;
-	private JTable table_estado;
+	private JComboBox comboBox_DIA;
 	private JComboBox comboBox_MES;
     private JComboBox comboBox_AÑO;
     LocalDate hoy = LocalDate.now();
 	private JTextField textField;
 	private String cod_use;
+	private JTable table_ing;
 
 	/**
 	 * Launch the application.
@@ -61,7 +60,7 @@ public class GUI_INGRESOS extends JFrame {
 	public GUI_INGRESOS(String cod_use) {
 	    this.cod_use = cod_use;
 		setTitle("AHORRA YA!");
-        setSize(350, 600);
+        setSize(334, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -72,7 +71,7 @@ public class GUI_INGRESOS extends JFrame {
         setContentPane(fondo);
         JPanel card = new JPanel();
         card.setBackground(Color.WHITE);
-        card.setBounds(10, 11, 315, 539);
+        card.setBounds(10, 11, 303, 539);
         fondo.add(card);
         card.setLayout(null);
         
@@ -81,69 +80,49 @@ public class GUI_INGRESOS extends JFrame {
         lblPresupuesto.setBounds(115, 11, 112, 14);
         card.add(lblPresupuesto);
         
-        JLabel lblNewLabel_1 = new JLabel("Ingreso mensual");
+        JLabel lblNewLabel_1 = new JLabel("Ingreso extra");
         lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        lblNewLabel_1.setBounds(8, 83, 121, 14);
+        lblNewLabel_1.setBounds(8, 91, 121, 25);
         card.add(lblNewLabel_1);
         
         textingreso = new JTextField();
-        textingreso.setBounds(8, 108, 282, 25);
+        textingreso.setBounds(8, 115, 282, 25);
         card.add(textingreso);
         textingreso.setColumns(10);
         
-        JLabel lblNewLabel_1_1 = new JLabel("Categoria de gasto");
-        lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        lblNewLabel_1_1.setBounds(8, 144, 121, 14);
-        card.add(lblNewLabel_1_1);
-        
-        JComboBox comboBox = new JComboBox();
-        comboBox.setModel(new DefaultComboBoxModel(new String[] {"COMIDA", "TRANPORTE", "VIVIENDA", "SERVICIOS", "COMPRAS", "ENTRETENIMIENTO", "SALUD", "EDUCACION", "ROPA", "MASCOTA"}));
-        comboBox.setBounds(8, 169, 282, 22);
-        card.add(comboBox);
-        
-        JLabel lblNewLabel_1_2 = new JLabel("Limite de gasto");
+        JLabel lblNewLabel_1_2 = new JLabel("Descripcion");
         lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        lblNewLabel_1_2.setBounds(8, 202, 121, 29);
+        lblNewLabel_1_2.setBounds(8, 143, 121, 25);
         card.add(lblNewLabel_1_2);
         
         JButton btnguardar = new JButton("Guardar");
         btnguardar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		try {
-                    
-                    double monto = Double.parseDouble(textingreso.getText());
-                    String categoria = comboBox.getSelectedItem().toString();
+        			double monto = Double.parseDouble(textingreso.getText());
+        		    String descripcion = textField.getText();
 
-                    java.sql.Date fecha = java.sql.Date.valueOf(LocalDate.now());
+        		    int dia = Integer.parseInt(comboBox_DIA.getSelectedItem().toString());
+        		    int mes = comboBox_MES.getSelectedIndex() + 1;
+        		    int anio = Integer.parseInt(comboBox_AÑO.getSelectedItem().toString());
+        		    java.sql.Date fecha = java.sql.Date.valueOf(LocalDate.of(anio, mes, dia));
 
-                    
-                 
-                   
-                    Connection con = CONECTA.conectar();
+        		    Ingreso ing = new Ingreso(null, cod_use, monto, descripcion, fecha);
+        		    boolean ok = ConsultasBD.guardarIngreso(ing);
 
-                  
-                    String sql = "INSERT INTO ingresos (\"USU_CODIGO\", \"ING_MONTO\", \"ING_CATEGORIA\", \"ING_FECHA\") VALUES (?, ?, ?, ?)";
-
-                    PreparedStatement ps = con.prepareStatement(sql);
-
-                    ps.setObject(1, java.util.UUID.fromString(cod_use));
-                    ps.setDouble(2, monto);
-                    ps.setString(3, categoria);
-                    ps.setDate(4, fecha);
-
-                    ps.executeUpdate();
-
-                    JOptionPane.showMessageDialog(null, "Ingreso guardado");
-
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error al guardar");
-                    ex.printStackTrace();
-                }
+        		    if (ok) {
+        		    	JOptionPane.showMessageDialog(null, "Ingreso guardado");
+        		    } else {
+        		    	JOptionPane.showMessageDialog(null, "Error al guardar");
+        		    }
+        		} catch (Exception ex) {
+        			JOptionPane.showMessageDialog(null, "Ingresa un monto valido");
+        		}
             }
         });
  
-        btnguardar.setBounds(10, 260, 280, 35);
-        btnguardar.setBackground(new Color(52, 152, 219));
+        btnguardar.setBounds(8, 202, 282, 35);
+        btnguardar.setBackground(new Color(46, 204, 113));
         btnguardar.setForeground(Color.WHITE);
         btnguardar.setFocusPainted(false);
         btnguardar.setBorderPainted(false);
@@ -154,66 +133,33 @@ public class GUI_INGRESOS extends JFrame {
         JButton btnVerDetalle = new JButton("Ver detalle");
         btnVerDetalle.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		try {
-                    Connection con = CONECTA.conectar();
-
-                    String sql = "SELECT \"ING_MONTO\", \"ING_CATEGORIA\", \"ING_FECHA\" FROM ingresos WHERE \"USU_CODIGO\" = ?";
-
-                    PreparedStatement ps = con.prepareStatement(sql);
-                    ps.setObject(1, java.util.UUID.fromString(cod_use));
-
-                    ResultSet rs = ps.executeQuery();
-
-                  
-                    DefaultTableModel modelo = new DefaultTableModel();
-                    modelo.addColumn("Monto");
-                    modelo.addColumn("Categoría");
-                    modelo.addColumn("Fecha");
-
-                    
-                    while (rs.next()) {
-                        Object[] fila = new Object[3];
-                        fila[0] = rs.getDouble("ING_MONTO");
-                        fila[1] = rs.getString("ING_CATEGORIA");
-                        fila[2] = rs.getDate("ING_FECHA");
-
-                        modelo.addRow(fila);
-                    }
-
-                   
-                    table_estado.setModel(modelo);
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error al cargar datos");
-                }
+        		java.util.LinkedList<Ingreso> lista = ConsultasBD.getIngresos(cod_use);
+        		DefaultTableModel modelo = new DefaultTableModel();
+        		modelo.addColumn("Codigo");
+        		modelo.addColumn("Monto");
+        		modelo.addColumn("Descripcion");
+        		modelo.addColumn("Fecha");
+        		for (Ingreso i : lista) {
+        			modelo.addRow(new Object[]{
+        					i.getIng_codigo(),
+        		            i.getIng_monto(),
+        		            i.getIng_descripcion(),
+        		            i.getIng_fecha()
+        		    });
+        		}
+        		table_ing.setModel(modelo);
+        		table_ing.getColumnModel().getColumn(0).setMinWidth(0);
+        		table_ing.getColumnModel().getColumn(0).setMaxWidth(0);
             }
         });	
   
         btnVerDetalle.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnVerDetalle.setBounds(12, 306, 280, 35);
+        btnVerDetalle.setBounds(8, 247, 282, 35);
         btnVerDetalle.setBackground(new Color(52, 152, 219));
         btnVerDetalle.setForeground(Color.WHITE);
         btnVerDetalle.setFocusPainted(false);
         btnVerDetalle.setBorderPainted(false);
         card.add(btnVerDetalle);
-        
-        table = new JTable();
-        table.setBounds(20, 425, 272, 0);
-        card.add(table);
-        
-        table_estado = new JTable();
-        table_estado.setBounds(10, 344, 282, 98);
-        card.add(table_estado);
-        
-        JButton btnestado = new JButton("Estado del presupuesto");
-        btnestado.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        btnestado.setBounds(20, 453, 270, 30);
-        btnestado.setBackground(new Color(52, 152, 219));
-        btnestado.setForeground(Color.WHITE);
-        btnestado.setFocusPainted(false);
-        btnestado.setBorderPainted(false);
-        card.add(btnestado);
         
         JButton btnvolver = new JButton("Volver al Inicio");
         btnvolver.addActionListener(new ActionListener() {
@@ -226,7 +172,7 @@ public class GUI_INGRESOS extends JFrame {
         	}
         });
         btnvolver.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        btnvolver.setBounds(20, 494, 270, 34);
+        btnvolver.setBounds(10, 495, 280, 34);
         btnvolver.setBackground(new Color(233, 30, 99));
         btnvolver.setForeground(Color.WHITE);
         btnvolver.setFocusPainted(false);
@@ -235,20 +181,60 @@ public class GUI_INGRESOS extends JFrame {
         
         textField = new JTextField();
         textField.setColumns(10);
-        textField.setBounds(8, 224, 282, 25);
+        textField.setBounds(8, 167, 282, 25);
         card.add(textField);
         
-        JComboBox comboBox_MES = new JComboBox();
+        JLabel lblNewLabel_1_1 = new JLabel("Fecha");
+        lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        lblNewLabel_1_1.setBounds(8, 35, 121, 14);
+        card.add(lblNewLabel_1_1);
+        
+        comboBox_DIA = new JComboBox();
+        comboBox_DIA.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"}));
+		comboBox_DIA.setSelectedIndex(hoy.getDayOfMonth() - 1);
+        comboBox_DIA.setBounds(8, 59, 86, 22);
+        card.add(comboBox_DIA);
+        
+        comboBox_MES = new JComboBox();
         comboBox_MES.setModel(new DefaultComboBoxModel(new String[] {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"}));
-        comboBox_MES.setSelectedIndex(4);
         comboBox_MES.setSelectedIndex(hoy.getMonthValue() - 1);
-        comboBox_MES.setBounds(12, 50, 124, 22);
+        comboBox_MES.setBounds(100, 59, 92, 22);
         card.add(comboBox_MES);
         
-        JComboBox comboBox_AÑO = new JComboBox();
+        comboBox_AÑO = new JComboBox();
         comboBox_AÑO.setModel(new DefaultComboBoxModel(new String[] {"2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", "2034", "2035"}));
-        comboBox_AÑO.setBounds(170, 50, 124, 22);
         comboBox_AÑO.setSelectedItem(String.valueOf(hoy.getYear()));
+        comboBox_AÑO.setBounds(198, 59, 92, 22);
         card.add(comboBox_AÑO);
+        
+        JButton btn_eliminar = new JButton("Eliminar ");
+        btn_eliminar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		int fila = table_ing.getSelectedRow();
+        		if (fila == -1) {
+        			JOptionPane.showMessageDialog(null, "Selecciona un ingreso de la tabla");
+        		    return;
+        		}
+        		String codigo = table_ing.getValueAt(fila, 0).toString();
+        		boolean ok = ConsultasBD.eliminarIngreso(codigo);
+        		if (ok) {
+        		   JOptionPane.showMessageDialog(null, "Ingreso eliminado");
+        		   btnVerDetalle.doClick();
+        		} else {
+        		   JOptionPane.showMessageDialog(null, "Error al eliminar");
+        		}
+        	}
+        });
+        btn_eliminar.setForeground(Color.WHITE);
+        btn_eliminar.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btn_eliminar.setFocusPainted(false);
+        btn_eliminar.setBorderPainted(false);
+        btn_eliminar.setBackground(Color.RED);
+        btn_eliminar.setBounds(8, 290, 282, 31);
+        card.add(btn_eliminar);
+        
+        table_ing = new JTable();
+        table_ing.setBounds(8, 343, 282, 98);
+        card.add(table_ing);
 	}
 }

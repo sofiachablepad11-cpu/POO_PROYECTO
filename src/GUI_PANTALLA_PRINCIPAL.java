@@ -16,8 +16,10 @@ import java.awt.event.ActionEvent;
 public class GUI_PANTALLA_PRINCIPAL extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
 	private String cod_use;
+	private JLabel lblsaldo;
+    private JLabel lblingreso;
+    private JLabel lblgasto;
 
 	/**
 	 * Launch the application.
@@ -66,7 +68,7 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
         lblNewLabel_1.setBounds(10, 53, 86, 14);
         card.add(lblNewLabel_1);
         
-        JLabel lblsaldo = new JLabel("3,000.00");
+        lblsaldo = new JLabel("0.00");
         lblsaldo.setFont(new Font("Tahoma", Font.PLAIN, 28));
         lblsaldo.setBounds(46, 68, 247, 51);
         card.add(lblsaldo);
@@ -76,16 +78,16 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
         lblNewLabel_3.setBounds(20, 78, 18, 34);
         card.add(lblNewLabel_3);
         
-        JLabel lblNewLabel_4 = new JLabel("Ingresos:");
+        JLabel lblNewLabel_4 = new JLabel("Ingreso extra:");
         lblNewLabel_4.setForeground(new Color(0, 153, 51));
         lblNewLabel_4.setFont(new Font("Tahoma", Font.BOLD, 12));
-        lblNewLabel_4.setBounds(10, 130, 66, 14);
+        lblNewLabel_4.setBounds(10, 130, 95, 14);
         card.add(lblNewLabel_4);
         
-        JLabel lblingreso = new JLabel("$ 1,500");
+        lblingreso = new JLabel("$ 0.00");
         lblingreso.setForeground(new Color(0, 153, 51));
         lblingreso.setFont(new Font("Tahoma", Font.BOLD, 12));
-        lblingreso.setBounds(72, 130, 71, 14);
+        lblingreso.setBounds(102, 130, 71, 14);
         card.add(lblingreso);
         
         JLabel lblNewLabel_4_1 = new JLabel("Gastos:");
@@ -94,7 +96,7 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
         lblNewLabel_4_1.setBounds(183, 130, 66, 14);
         card.add(lblNewLabel_4_1);
         
-        JLabel lblgasto = new JLabel("$ 2,000");
+        lblgasto = new JLabel("$ 0.00");
         lblgasto.setForeground(new Color(153, 51, 51));
         lblgasto.setFont(new Font("Tahoma", Font.BOLD, 12));
         lblgasto.setBounds(234, 130, 71, 14);
@@ -164,7 +166,7 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
         JButton btnpresupuesto = new JButton("Presupuesto");
         btnpresupuesto.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		GUI_PRESUPUESTO PRE = new GUI_PRESUPUESTO();
+        		GUI_PRESUPUESTO PRE = new GUI_PRESUPUESTO(cod_use);
 				PRE.setVisible(true);
 				dispose();
         	}
@@ -178,7 +180,7 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
         JButton btnalertas = new JButton("Alertas");
         btnalertas.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		GUI_ALARMAS ALA = new GUI_ALARMAS();
+        		GUI_ALARMAS ALA = new GUI_ALARMAS(cod_use);
 				ALA.setVisible(true);
 
 				
@@ -205,8 +207,27 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
         btncerrar.setFocusPainted(false);
         btncerrar.setBorderPainted(false);
         card.add(btncerrar);
+        
+        cargarResumen();
 		
 
 	}
+	
+	private void cargarResumen() {
+        double totalIng = ConsultasBD.getTotalIngresos(cod_use);
+        double totalGas = ConsultasBD.getTotalGastos(cod_use);
+        double saldo    = ConsultasBD.getSaldo(cod_use);
+
+        lblingreso.setText(String.format("$ %.2f", totalIng));
+        lblgasto.setText(String.format("$ %.2f", totalGas));
+        lblsaldo.setText(String.format("%.2f", saldo));
+
+        if (saldo < 0) {
+            lblsaldo.setForeground(new Color(220, 53, 69));
+        } else {
+            lblsaldo.setForeground(Color.BLACK);
+        }
+    }
+
 
 }
