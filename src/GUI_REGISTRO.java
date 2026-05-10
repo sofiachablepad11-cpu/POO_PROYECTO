@@ -82,7 +82,7 @@ public class GUI_REGISTRO extends JFrame {
 		panel.add(text_nombre);
 		
 		JLabel lbl_correo = new JLabel("Correo");
-		lbl_correo.setBounds(40, 247, 200, 20);
+		lbl_correo.setBounds(40, 257, 200, 20);
 		lbl_correo.setForeground(Color.WHITE);
 		panel.add(lbl_correo);
 
