@@ -65,44 +65,44 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
         card.add(lblNewLabel);
         
         JLabel lblNewLabel_1 = new JLabel("Saldo actual");
-        lblNewLabel_1.setBounds(10, 53, 86, 14);
+        lblNewLabel_1.setBounds(20, 35, 86, 14);
         card.add(lblNewLabel_1);
         
         lblsaldo = new JLabel("0.00");
         lblsaldo.setFont(new Font("Tahoma", Font.PLAIN, 28));
-        lblsaldo.setBounds(46, 68, 247, 51);
+        lblsaldo.setBounds(56, 50, 247, 51);
         card.add(lblsaldo);
         
         JLabel lblNewLabel_3 = new JLabel("$");
         lblNewLabel_3.setFont(new Font("Tahoma", Font.BOLD, 14));
-        lblNewLabel_3.setBounds(20, 78, 18, 34);
+        lblNewLabel_3.setBounds(30, 60, 18, 34);
         card.add(lblNewLabel_3);
         
         JLabel lblNewLabel_4 = new JLabel("Ingreso extra:");
         lblNewLabel_4.setForeground(new Color(0, 153, 51));
         lblNewLabel_4.setFont(new Font("Tahoma", Font.BOLD, 12));
-        lblNewLabel_4.setBounds(10, 130, 95, 14);
+        lblNewLabel_4.setBounds(20, 112, 95, 14);
         card.add(lblNewLabel_4);
         
         lblingreso = new JLabel("$ 0.00");
         lblingreso.setForeground(new Color(0, 153, 51));
         lblingreso.setFont(new Font("Tahoma", Font.BOLD, 12));
-        lblingreso.setBounds(102, 130, 71, 14);
+        lblingreso.setBounds(112, 112, 71, 14);
         card.add(lblingreso);
         
         JLabel lblNewLabel_4_1 = new JLabel("Gastos:");
         lblNewLabel_4_1.setForeground(new Color(153, 51, 51));
         lblNewLabel_4_1.setFont(new Font("Tahoma", Font.BOLD, 12));
-        lblNewLabel_4_1.setBounds(183, 130, 66, 14);
+        lblNewLabel_4_1.setBounds(193, 112, 66, 14);
         card.add(lblNewLabel_4_1);
         
         lblgasto = new JLabel("$ 0.00");
         lblgasto.setForeground(new Color(153, 51, 51));
         lblgasto.setFont(new Font("Tahoma", Font.BOLD, 12));
-        lblgasto.setBounds(234, 130, 71, 14);
+        lblgasto.setBounds(244, 112, 71, 14);
         card.add(lblgasto);
         
-        JButton btningreso = new JButton("Agregar ingreso");
+        JButton btningreso = new JButton("Agregar ingresos extras");
         btningreso.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		GUI_INGRESOS PRE = new GUI_INGRESOS(cod_use);
@@ -112,7 +112,7 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
 				dispose();
         	}
         });
-        btningreso.setBounds(20, 188, 269, 34);
+        btningreso.setBounds(20, 136, 269, 34);
         btningreso.setBackground(new Color(52, 152, 219));
         btningreso.setForeground(Color.WHITE);
         btningreso.setFocusPainted(false);
@@ -131,7 +131,7 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
 				dispose();
         	}
         });
-        btngasto.setBounds(20, 244, 269, 34);
+        btngasto.setBounds(20, 193, 269, 34);
         btngasto.setBackground(new Color(52, 152, 219));
         btngasto.setForeground(Color.WHITE);
         btngasto.setFocusPainted(false);
@@ -139,7 +139,7 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
         btngasto.setFont(new Font("Tahoma", Font.BOLD, 12));
         card.add(btngasto);
         
-        JButton btnmovimientos = new JButton("Ver movimientos");
+        JButton btnmovimientos = new JButton("Movimientos");
         btnmovimientos.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		GUI_REPORTES REP = new GUI_REPORTES(cod_use);
@@ -208,6 +208,15 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
         btncerrar.setBorderPainted(false);
         card.add(btncerrar);
         
+        JButton btn_apartados = new JButton("Apartados");
+        btn_apartados.setForeground(Color.WHITE);
+        btn_apartados.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btn_apartados.setFocusPainted(false);
+        btn_apartados.setBorderPainted(false);
+        btn_apartados.setBackground(new Color(52, 152, 219));
+        btn_apartados.setBounds(20, 248, 269, 34);
+        card.add(btn_apartados);
+        
         cargarResumen();
 		
 
@@ -228,6 +237,4 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
             lblsaldo.setForeground(Color.BLACK);
         }
     }
-
-
 }
