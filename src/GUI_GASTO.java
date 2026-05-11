@@ -21,20 +21,23 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.awt.event.ActionEvent;
 
 public class GUI_GASTO extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-    private JTextField textingreso;
+	private JTextField textingreso;
     private JTextField textField;
     private JTable table_gas;
     private JComboBox comboBox_DIA;
     private JComboBox comboBox_MES;
     private JComboBox comboBox_AÑO;
     private JComboBox comboBox_categoria;
+    private JComboBox comboBox_apartado;
     LocalDate hoy = LocalDate.now();
     private String cod_use;
+    private LinkedList<Apartado> listaApartados = new LinkedList<>();
 	
 
 	/**
@@ -145,7 +148,7 @@ public class GUI_GASTO extends JFrame {
                     int anio = Integer.parseInt(comboBox_AÑO.getSelectedItem().toString());
                     java.sql.Date fecha = java.sql.Date.valueOf(LocalDate.of(anio, mes, dia));
  
-                    Gasto gas = new Gasto(null, cod_use, monto, categoria, descripcion, fecha);
+                    Gasto gas = new Gasto(null, cod_use, monto, categoria, descripcion, fecha,null);
                     boolean ok = ConsultasBD.guardarGasto(gas);
  
                     if (ok) {

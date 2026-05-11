@@ -209,6 +209,13 @@ public class GUI_PANTALLA_PRINCIPAL extends JFrame {
         card.add(btncerrar);
         
         JButton btn_apartados = new JButton("Apartados");
+        btn_apartados.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		GUI_APARTADO APA = new GUI_APARTADO(cod_use);
+                APA.setVisible(true);
+                dispose();
+        	}
+        });
         btn_apartados.setForeground(Color.WHITE);
         btn_apartados.setFont(new Font("Tahoma", Font.BOLD, 12));
         btn_apartados.setFocusPainted(false);

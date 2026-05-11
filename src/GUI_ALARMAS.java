@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 import java.awt.event.ActionEvent;
 
 public class GUI_ALARMAS extends JFrame {
@@ -45,7 +46,7 @@ public class GUI_ALARMAS extends JFrame {
 	public GUI_ALARMAS(String cod_use) {
         this.cod_use = cod_use;
         setTitle("AHORRA YA!");
-        setSize(350, 600);
+        setSize(329, 495);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -57,12 +58,13 @@ public class GUI_ALARMAS extends JFrame {
  
         JPanel card = new JPanel();
         card.setBackground(Color.WHITE);
-        card.setBounds(10, 11, 315, 539);
+        card.setBounds(10, 11, 293, 435);
         fondo.add(card);
         card.setLayout(null);
  
         JLabel lblAlertas = new JLabel("ALERTAS");
-        lblAlertas.setBounds(114, 31, 112, 14);
+        lblAlertas.setHorizontalAlignment(SwingConstants.CENTER);
+        lblAlertas.setBounds(10, 31, 273, 14);
         lblAlertas.setFont(new Font("Tahoma", Font.BOLD, 14));
         card.add(lblAlertas);
  
@@ -76,7 +78,7 @@ public class GUI_ALARMAS extends JFrame {
         modelo.addColumn("Mensaje");
  
         table = new JTable(modelo);
-        table.setBounds(10, 100, 295, 215);
+        table.setBounds(10, 100, 273, 215);
         card.add(table);
  
         JButton btnMarcar = new JButton("Marcar como leidas");
@@ -90,7 +92,7 @@ public class GUI_ALARMAS extends JFrame {
                 JOptionPane.showMessageDialog(null, "Alertas marcadas como leidas");
             }
         });
-        btnMarcar.setBounds(10, 330, 295, 28);
+        btnMarcar.setBounds(10, 330, 273, 28);
         btnMarcar.setBackground(new Color(52, 152, 219));
         btnMarcar.setForeground(Color.WHITE);
         btnMarcar.setFocusPainted(false);
@@ -106,7 +108,7 @@ public class GUI_ALARMAS extends JFrame {
                 dispose();
             }
         });
-        btnVolverAlInicio.setBounds(10, 370, 295, 28);
+        btnVolverAlInicio.setBounds(10, 370, 273, 28);
         btnVolverAlInicio.setBackground(new Color(231, 76, 60));
         btnVolverAlInicio.setForeground(Color.WHITE);
         btnVolverAlInicio.setFocusPainted(false);
@@ -125,23 +127,41 @@ public class GUI_ALARMAS extends JFrame {
  
         if (gastos > presupuesto) {
             modelo.addRow(new Object[]{
-                "PRESUPUESTO",
-                "Tus gastos ($" + String.format("%.2f", gastos) +
-                ") superan tu presupuesto ($" + String.format("%.2f", presupuesto) + ")"
+                "PRESUPUESTO", "Tus gastos ($" + String.format("%.2f", gastos) +") superan tu presupuesto ($" + String.format("%.2f", presupuesto) + ")"
             });
         }
  
         if (saldo < 0) {
             modelo.addRow(new Object[]{
-                "SALDO",
-                "Tu saldo es negativo: $" + String.format("%.2f", saldo)
+                "SALDO", "Tu saldo es negativo: $" + String.format("%.2f", saldo)
             });
+        }
+ 
+        LinkedList<Apartado> apartados = ConsultasBD.getApartados(cod_use);
+        LinkedList<Gasto> listaGastos  = ConsultasBD.getGastos(cod_use);
+ 
+        for (Apartado apa : apartados) {
+            String categoria = apa.getApa_categoria();
+            double limite    = apa.getApa_limite();
+            double totalCat  = 0;
+ 
+   
+            for (Gasto g : listaGastos) {
+                if (g.getGas_categoria().equalsIgnoreCase(categoria)) {
+                    totalCat += g.getGas_monto();
+                }
+            }
+ 
+            if (totalCat > limite) {
+                modelo.addRow(new Object[]{
+                    "LIMITE " + categoria, "Gastaste $" + String.format("%.2f", totalCat) + " en " + categoria + ", tu limite era $" + String.format("%.2f", limite)
+                });
+            }
         }
  
         if (modelo.getRowCount() == 0) {
             modelo.addRow(new Object[]{
-                "OK",
-                "Todo esta en orden, no hay alertas"
+                "OK", "Todo esta en orden"
             });
         }
     }

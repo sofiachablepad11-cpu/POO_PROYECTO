@@ -146,7 +146,12 @@ public class ConsultasBD {
             ps.setString(3, gas.getGas_categoria());
             ps.setString(4, gas.getGas_descripcion());
             ps.setDate(5, gas.getGas_fecha());
-            ps.setObject(6, java.util.UUID.fromString(gas.getApa_codigo()));
+            
+            if (gas.getApa_codigo() == null || gas.getApa_codigo().isEmpty()) {
+                ps.setNull(6, java.sql.Types.OTHER);
+            } else {
+                ps.setObject(6, java.util.UUID.fromString(gas.getApa_codigo()));
+            }
 
             ps.executeUpdate();
             con.close();
