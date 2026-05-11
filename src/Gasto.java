@@ -7,18 +7,21 @@ public class Gasto {
     private String gas_categoria;
     private String gas_descripcion;
     private Date gas_fecha;
+    private String apa_codigo;
     
 	public Gasto() {
 	}
 
 	public Gasto(String gas_codigo, String usu_codigo, double gas_monto, String gas_categoria, String gas_descripcion,
-			Date gas_fecha) {
+			Date gas_fecha, String apa_codigo) {
+		super();
 		this.gas_codigo = gas_codigo;
 		this.usu_codigo = usu_codigo;
 		this.gas_monto = gas_monto;
 		this.gas_categoria = gas_categoria;
 		this.gas_descripcion = gas_descripcion;
 		this.gas_fecha = gas_fecha;
+		this.apa_codigo = apa_codigo;
 	}
 
 	public String getGas_codigo() {
@@ -67,6 +70,14 @@ public class Gasto {
 
 	public void setGas_fecha(Date gas_fecha) {
 		this.gas_fecha = gas_fecha;
+	}
+
+	public String getApa_codigo() {
+		return apa_codigo;
+	}
+
+	public void setApa_codigo(String apa_codigo) {
+		this.apa_codigo = apa_codigo;
 	}
 	
 	
