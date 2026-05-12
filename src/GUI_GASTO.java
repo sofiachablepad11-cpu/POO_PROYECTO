@@ -77,6 +77,7 @@ public class GUI_GASTO extends JFrame {
         card.setBounds(10, 11, 315, 539);
         fondo.add(card);
         card.setLayout(null);
+        
  
         JLabel lbGASTO = new JLabel("AGREGAR GASTO");
         lbGASTO.setFont(new Font("Tahoma", Font.BOLD, 14));
