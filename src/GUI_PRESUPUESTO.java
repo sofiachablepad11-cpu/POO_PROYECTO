@@ -53,7 +53,7 @@ public class GUI_PRESUPUESTO extends JFrame {
 	public GUI_PRESUPUESTO(String cod_use) {
         this.cod_use = cod_use;
         setTitle("AHORRA YA!");
-        setSize(350, 537);
+        setSize(350, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -65,7 +65,7 @@ public class GUI_PRESUPUESTO extends JFrame {
  
         JPanel card = new JPanel();
         card.setBackground(Color.WHITE);
-        card.setBounds(10, -18, 315, 491);
+        card.setBounds(10, 11, 315, 539);
         fondo.add(card);
         card.setLayout(null);
  
@@ -113,7 +113,6 @@ public class GUI_PRESUPUESTO extends JFrame {
         btn_guardarp.setBackground(new Color(46, 204, 113));
         btn_guardarp.setForeground(Color.WHITE);
         btn_guardarp.setFocusPainted(false);
-        btn_guardarp.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         btn_guardarp.setFont(new Font("Tahoma", Font.BOLD, 12));
         card.add(btn_guardarp);
  
@@ -160,7 +159,6 @@ public class GUI_PRESUPUESTO extends JFrame {
         btn_actualizar.setBackground(new Color(52, 152, 219));
         btn_actualizar.setForeground(Color.WHITE);
         btn_actualizar.setFocusPainted(false);
-        btn_actualizar.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         btn_actualizar.setFont(new Font("Tahoma", Font.BOLD, 12));
         card.add(btn_actualizar);
  

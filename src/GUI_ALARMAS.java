@@ -46,7 +46,7 @@ public class GUI_ALARMAS extends JFrame {
 	public GUI_ALARMAS(String cod_use) {
         this.cod_use = cod_use;
         setTitle("AHORRA YA!");
-        setSize(329, 495);
+        setSize(334, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -58,7 +58,7 @@ public class GUI_ALARMAS extends JFrame {
  
         JPanel card = new JPanel();
         card.setBackground(Color.WHITE);
-        card.setBounds(10, 11, 293, 435);
+        card.setBounds(10, 11, 303, 539);
         fondo.add(card);
         card.setLayout(null);
  
