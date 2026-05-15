@@ -25,7 +25,6 @@ public class GUI_APARTADO extends JFrame {
 	private JPanel contentPane;
     private JTextField textField;
     private JTable table;
-    private JButton btnVerLimitesEstablecidos;
     private String cod_use;
     private DefaultTableModel modelo;
     private JComboBox comboBox_DIA;
@@ -153,38 +152,8 @@ public class GUI_APARTADO extends JFrame {
         btnguardar.setFocusPainted(false);
         btnguardar.setBorderPainted(false);
         btnguardar.setBackground(new Color(46, 204, 113));
-        btnguardar.setBounds(10, 201, 282, 35);
+        btnguardar.setBounds(10, 218, 282, 35);
         card.add(btnguardar);
- 
-        btnVerLimitesEstablecidos = new JButton("Ver limites establecidos");
-        btnVerLimitesEstablecidos.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                java.util.LinkedList<Apartado> lista = ConsultasBD.getApartados(cod_use);
-                modelo = new DefaultTableModel();
-                modelo.addColumn("Codigo");
-                modelo.addColumn("Limite");
-                modelo.addColumn("Categoria");
-                modelo.addColumn("Fecha");
-                for (Apartado a : lista) {
-                    modelo.addRow(new Object[]{
-                        a.getApa_codigo(),
-                        String.format("$ %.2f", a.getApa_limite()),
-                        a.getApa_categoria(),
-                        a.getApa_fecha()
-                    });
-                }
-                table.setModel(modelo);
-                table.getColumnModel().getColumn(0).setMinWidth(0);
-                table.getColumnModel().getColumn(0).setMaxWidth(0);
-            }
-        });
-        btnVerLimitesEstablecidos.setForeground(Color.WHITE);
-        btnVerLimitesEstablecidos.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnVerLimitesEstablecidos.setFocusPainted(false);
-        btnVerLimitesEstablecidos.setBorderPainted(false);
-        btnVerLimitesEstablecidos.setBackground(new Color(52, 152, 219));
-        btnVerLimitesEstablecidos.setBounds(10, 246, 282, 35);
-        card.add(btnVerLimitesEstablecidos);
  
         JButton btn_eliminar = new JButton("Eliminar");
         btn_eliminar.addActionListener(new ActionListener() {
@@ -209,11 +178,11 @@ public class GUI_APARTADO extends JFrame {
         btn_eliminar.setFocusPainted(false);
         btn_eliminar.setBorderPainted(false);
         btn_eliminar.setBackground(Color.RED);
-        btn_eliminar.setBounds(10, 291, 282, 31);
+        btn_eliminar.setBounds(10, 269, 282, 31);
         card.add(btn_eliminar);
  
         table = new JTable();
-        table.setBounds(10, 332, 282, 154);
+        table.setBounds(10, 311, 282, 175);
         card.add(table);
 
         JButton btnvolver = new JButton("Volver al Inicio");
