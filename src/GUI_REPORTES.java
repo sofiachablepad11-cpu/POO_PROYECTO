@@ -1,4 +1,3 @@
-
 import java.awt.Color;
 import java.awt.EventQueue;
 import conec.CONECTA;
@@ -142,15 +141,16 @@ public class GUI_REPORTES extends JFrame {
         totalGas.setBounds(10, 30, 200, 25);
         panelGastos.add(totalGas);
  
-        JButton btnActualizar = new JButton("Actualizar");
+        JButton btnActualizar = new JButton("Imprimir\r\n");
         btnActualizar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                double ing = ConsultasBD.getTotalIngresos(cod_use);
-                double gas = ConsultasBD.getTotalGastos(cod_use);
-                double pre = ConsultasBD.getTotalPresupuesto(cod_use);
-                totalIng.setText(String.format("$ %.2f", ing));
-                totalGas.setText(String.format("$ %.2f", gas));
-                totalPre.setText(String.format("$ %.2f", pre));
+            	 if (table.getModel().getRowCount() == 0) {
+                     JOptionPane.showMessageDialog(null,
+                         "Primero presiona 'Ver movimientos' para cargar los datos.");
+                     return;
+                 }
+               
+                
             }
         });
         btnActualizar.setBounds(10, 282, 295, 35);
@@ -181,18 +181,14 @@ public class GUI_REPORTES extends JFrame {
                 java.util.LinkedList<Ingreso> ingresos = ConsultasBD.getIngresos(cod_use);
                 for (Ingreso i : ingresos) {
                     modelo.addRow(new Object[]{
-                        String.format("$ %.2f", i.getIng_monto()),
-                        "INGRESO",
-                        i.getIng_fecha()
+                        String.format("$ %.2f", i.getIng_monto()),"INGRESO",i.getIng_fecha()
                     });
                 }
  
                 java.util.LinkedList<Gasto> gastos = ConsultasBD.getGastos(cod_use);
                 for (Gasto g : gastos) {
                     modelo.addRow(new Object[]{
-                        String.format("$ %.2f", g.getGas_monto()),
-                        "GASTO",
-                        g.getGas_fecha()
+                        String.format("$ %.2f", g.getGas_monto()),"GASTO",g.getGas_fecha()
                     });
                 }
  
@@ -221,6 +217,7 @@ public class GUI_REPORTES extends JFrame {
         btnVolver.setBorderPainted(false);
         card.add(btnVolver);
  
-        btnActualizar.doClick();
+       
     }
+	
 }
