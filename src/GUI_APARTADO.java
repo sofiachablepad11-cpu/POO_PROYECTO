@@ -17,6 +17,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.awt.event.ActionEvent;
 
 public class GUI_APARTADO extends JFrame {
@@ -124,29 +125,56 @@ public class GUI_APARTADO extends JFrame {
         JButton btnguardar = new JButton("Guardar");
         btnguardar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
-                    double limite = Double.parseDouble(textField.getText());
-                    String categoria = comboBox_categoria.getSelectedItem().toString();
- 
-                    int dia  = Integer.parseInt(comboBox_DIA.getSelectedItem().toString());
-                    int mes  = comboBox_MES.getSelectedIndex() + 1;
-                    int anio = Integer.parseInt(comboBox_AÑO.getSelectedItem().toString());
-                    java.sql.Date fecha = java.sql.Date.valueOf(LocalDate.of(anio, mes, dia));
- 
-                    Apartado apa = new Apartado(null, cod_use, limite, categoria, fecha);
-                    boolean ok = ConsultasBD.guardarApartado(apa);
- 
-                    if (ok) {
-                        JOptionPane.showMessageDialog(null, "Apartado guardado correctamente");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Error al guardar apartado");
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Ingresa un monto valido");
-                }
-            }
-        });
+            	 try {
+                     double limite = Double.parseDouble(textField.getText());
+                     String categoria = comboBox_categoria.getSelectedItem().toString();
+
+                     int dia  = Integer.parseInt(comboBox_DIA.getSelectedItem().toString());
+                     int mes  = comboBox_MES.getSelectedIndex() + 1;
+                     int anio = Integer.parseInt(comboBox_AÑO.getSelectedItem().toString());
+
+                     java.sql.Date fecha = java.sql.Date.valueOf(LocalDate.of(anio, mes, dia));
+
+                     Apartado apa = new Apartado(null, cod_use, limite, categoria, fecha);
+
+                     boolean ok = ConsultasBD.guardarApartado(apa);
+
+                     if (ok) {
+                         JOptionPane.showMessageDialog(null, "Apartado guardado correctamente");
+
+                       
+                         LinkedList<Apartado> lista = ConsultasBD.getApartados(cod_use);
+
+                         DefaultTableModel modelo = new DefaultTableModel();
+                         modelo.addColumn("Codigo");
+                         modelo.addColumn("Limite");
+                         modelo.addColumn("Categoria");
+                         modelo.addColumn("Fecha");
+
+                         for (Apartado a : lista) {
+                             modelo.addRow(new Object[]{
+                                 a.getApa_codigo(),
+                                 String.format("$ %.2f", a.getApa_limite()),
+                                 a.getApa_categoria(),
+                                 a.getApa_fecha()
+                             });
+                         }
+
+                         table.setModel(modelo);
+
+                        
+                         table.getColumnModel().getColumn(0).setMinWidth(0);
+                         table.getColumnModel().getColumn(0).setMaxWidth(0);
+
+                     } else {
+                         JOptionPane.showMessageDialog(null, "Error al guardar apartado");
+                     }
+
+                 } catch (Exception ex) {
+                     JOptionPane.showMessageDialog(null, "Ingresa un monto válido");
+                 }
+             }
+         });
         btnguardar.setForeground(Color.WHITE);
         btnguardar.setFont(new Font("Tahoma", Font.BOLD, 12));
         btnguardar.setFocusPainted(false);
@@ -158,21 +186,49 @@ public class GUI_APARTADO extends JFrame {
         JButton btn_eliminar = new JButton("Eliminar");
         btn_eliminar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int fila = table.getSelectedRow();
-                if (fila == -1) {
-                    JOptionPane.showMessageDialog(null, "Selecciona un apartado de la tabla");
-                    return;
-                }
-                String codigo = table.getValueAt(fila, 0).toString();
-                boolean ok = ConsultasBD.eliminarApartado(codigo);
-                if (ok) {
-                    JOptionPane.showMessageDialog(null, "Apartado eliminado");
-                    btnVerLimitesEstablecidos.doClick();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error al eliminar");
-                }
-            }
-        });
+            	 int fila = table.getSelectedRow();
+
+                 if (fila == -1) {
+                     JOptionPane.showMessageDialog(null, "Selecciona un apartado de la tabla");
+                     return;
+                 }
+
+                 String codigo = table.getValueAt(fila, 0).toString();
+
+                 boolean ok = ConsultasBD.eliminarApartado(codigo);
+
+                 if (ok) {
+                     JOptionPane.showMessageDialog(null, "Apartado eliminado");
+
+                    
+                     LinkedList<Apartado> lista = ConsultasBD.getApartados(cod_use);
+
+                     DefaultTableModel modelo = new DefaultTableModel();
+                     modelo.addColumn("Codigo");
+                     modelo.addColumn("Limite");
+                     modelo.addColumn("Categoria");
+                     modelo.addColumn("Fecha");
+
+                     for (Apartado a : lista) {
+                         modelo.addRow(new Object[]{
+                             a.getApa_codigo(),
+                             String.format("$ %.2f", a.getApa_limite()),
+                             a.getApa_categoria(),
+                             a.getApa_fecha()
+                         });
+                     }
+
+                     table.setModel(modelo);
+
+                     
+                     table.getColumnModel().getColumn(0).setMinWidth(0);
+                     table.getColumnModel().getColumn(0).setMaxWidth(0);
+
+                 } else {
+                     JOptionPane.showMessageDialog(null, "Error al eliminar");
+                 }
+             }
+         });
         btn_eliminar.setForeground(Color.WHITE);
         btn_eliminar.setFont(new Font("Tahoma", Font.BOLD, 12));
         btn_eliminar.setFocusPainted(false);
