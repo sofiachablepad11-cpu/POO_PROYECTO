@@ -149,7 +149,7 @@ public class GUI_REPORTES extends JFrame {
                          "Primero presiona 'Ver movimientos' para cargar los datos.");
                      return;
                  }
-               
+            	 exportarExcel();
                 
             }
         });
