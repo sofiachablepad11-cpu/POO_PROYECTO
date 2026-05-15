@@ -153,7 +153,7 @@ public class GUI_REPORTES extends JFrame {
                 
             }
         });
-        btnActualizar.setBounds(10, 282, 295, 35);
+        btnActualizar.setBounds(10, 451, 295, 35);
         btnActualizar.setBackground(new Color(0, 153, 51));
         btnActualizar.setForeground(Color.WHITE);
         btnActualizar.setFocusPainted(false);
@@ -171,6 +171,7 @@ public class GUI_REPORTES extends JFrame {
         card.add(table);
  
         JButton btnVerDetalles = new JButton("Ver movimientos");
+        btnVerDetalles.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnVerDetalles.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 DefaultTableModel modelo = new DefaultTableModel();
@@ -195,7 +196,7 @@ public class GUI_REPORTES extends JFrame {
                 table.setModel(modelo);
             }
         });
-        btnVerDetalles.setBounds(10, 461, 295, 25);
+        btnVerDetalles.setBounds(10, 281, 295, 36);
         btnVerDetalles.setBackground(new Color(0, 120, 215));
         btnVerDetalles.setForeground(Color.WHITE);
         btnVerDetalles.setFocusPainted(false);
