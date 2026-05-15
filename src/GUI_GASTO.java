@@ -1,4 +1,3 @@
-
 import java.awt.Color;
 import java.awt.EventQueue;
 
@@ -139,27 +138,56 @@ public class GUI_GASTO extends JFrame {
         JButton btnguardar = new JButton("Guardar");
         btnguardar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
+            	try {
                     double monto = Double.parseDouble(textingreso.getText());
                     String categoria = comboBox_categoria.getSelectedItem().toString();
                     String descripcion = textField.getText();
- 
+
                     int dia = Integer.parseInt(comboBox_DIA.getSelectedItem().toString());
                     int mes = comboBox_MES.getSelectedIndex() + 1;
                     int anio = Integer.parseInt(comboBox_AÑO.getSelectedItem().toString());
+
                     java.sql.Date fecha = java.sql.Date.valueOf(LocalDate.of(anio, mes, dia));
- 
-                    Gasto gas = new Gasto(null, cod_use, monto, categoria, descripcion, fecha,null);
+
+                    Gasto gas = new Gasto(null, cod_use, monto, categoria, descripcion, fecha, null);
+
                     boolean ok = ConsultasBD.guardarGasto(gas);
- 
+
                     if (ok) {
                         JOptionPane.showMessageDialog(null, "Gasto guardado correctamente");
+
+                      
+                        LinkedList<Gasto> lista = ConsultasBD.getGastos(cod_use);
+
+                        DefaultTableModel modelo = new DefaultTableModel();
+                        modelo.addColumn("Codigo");
+                        modelo.addColumn("Monto");
+                        modelo.addColumn("Categoria");
+                        modelo.addColumn("Descripcion");
+                        modelo.addColumn("Fecha");
+
+                        for (Gasto g : lista) {
+                            modelo.addRow(new Object[]{
+                                g.getGas_codigo(),
+                                g.getGas_monto(),
+                                g.getGas_categoria(),
+                                g.getGas_descripcion(),
+                                g.getGas_fecha()
+                            });
+                        }
+
+                        table_gas.setModel(modelo);
+
+                        
+                        table_gas.getColumnModel().getColumn(0).setMinWidth(0);
+                        table_gas.getColumnModel().getColumn(0).setMaxWidth(0);
+
                     } else {
                         JOptionPane.showMessageDialog(null, "Error al guardar gasto");
                     }
+
                 } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Ingresa un monto valido");
+                    JOptionPane.showMessageDialog(null, "Ingresa un monto válido");
                 }
             }
         });
@@ -174,21 +202,51 @@ public class GUI_GASTO extends JFrame {
         JButton btn_eliminar = new JButton("Eliminar");
         btn_eliminar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int fila = table_gas.getSelectedRow();
-                if (fila == -1) {
-                    JOptionPane.showMessageDialog(null, "Selecciona un gasto de la tabla");
-                    return;
-                }
-                String codigo = table_gas.getValueAt(fila, 0).toString();
-                boolean ok = ConsultasBD.eliminarGasto(codigo);
-                if (ok) {
-                    JOptionPane.showMessageDialog(null, "Gasto eliminado");
-                    btnVerDetalle.doClick();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error al eliminar");
-                }
-            }
-        });
+            	 int fila = table_gas.getSelectedRow();
+
+                 if (fila == -1) {
+                     JOptionPane.showMessageDialog(null, "Selecciona un gasto de la tabla");
+                     return;
+                 }
+
+                 String codigo = table_gas.getValueAt(fila, 0).toString();
+
+                 boolean ok = ConsultasBD.eliminarGasto(codigo);
+
+                 if (ok) {
+                     JOptionPane.showMessageDialog(null, "Gasto eliminado");
+
+                   
+                     LinkedList<Gasto> lista = ConsultasBD.getGastos(cod_use);
+
+                     DefaultTableModel modelo = new DefaultTableModel();
+                     modelo.addColumn("Codigo");
+                     modelo.addColumn("Monto");
+                     modelo.addColumn("Categoria");
+                     modelo.addColumn("Descripcion");
+                     modelo.addColumn("Fecha");
+
+                     for (Gasto g : lista) {
+                         modelo.addRow(new Object[]{
+                             g.getGas_codigo(),
+                             g.getGas_monto(),
+                             g.getGas_categoria(),
+                             g.getGas_descripcion(),
+                             g.getGas_fecha()
+                         });
+                     }
+
+                     table_gas.setModel(modelo);
+
+                    
+                     table_gas.getColumnModel().getColumn(0).setMinWidth(0);
+                     table_gas.getColumnModel().getColumn(0).setMaxWidth(0);
+
+                 } else {
+                     JOptionPane.showMessageDialog(null, "Error al eliminar");
+                 }
+             }
+         });
         btn_eliminar.setForeground(Color.WHITE);
         btn_eliminar.setFont(new Font("Tahoma", Font.BOLD, 12));
         btn_eliminar.setFocusPainted(false);
