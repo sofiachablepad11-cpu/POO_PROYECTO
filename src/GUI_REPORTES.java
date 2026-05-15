@@ -216,8 +216,85 @@ public class GUI_REPORTES extends JFrame {
         btnVolver.setFocusPainted(false);
         btnVolver.setBorderPainted(false);
         card.add(btnVolver);
- 
-       
+	}
+        private void exportarExcel() {
+    	    javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
+    	    javax.swing.filechooser.FileNameExtensionFilter filter = 
+    	        new javax.swing.filechooser.FileNameExtensionFilter("Archivos de excel", "xls");
+    	    chooser.setFileFilter(filter);
+    	    chooser.setDialogTitle("Guardar reporte");
+    	    chooser.setAcceptAllFileFilterUsed(false);
+    	    chooser.setSelectedFile(new java.io.File(
+    	        "Reporte_AhorraYa_" + comboBox_MES.getSelectedItem() + 
+    	        "_" + comboBox_AÑO.getSelectedItem() + ".xls"));
+
+    	    if (chooser.showSaveDialog(null) == javax.swing.JFileChooser.APPROVE_OPTION) {
+    	        String ruta = chooser.getSelectedFile().toString();
+    	        if (!ruta.endsWith(".xls")) ruta = ruta + ".xls";
+
+    	        try {
+    	            java.io.File archivoXLS = new java.io.File(ruta);
+    	            if (archivoXLS.exists()) archivoXLS.delete();
+    	            archivoXLS.createNewFile();
+
+    	            org.apache.poi.ss.usermodel.Workbook libro = 
+    	                new org.apache.poi.hssf.usermodel.HSSFWorkbook();
+    	            java.io.FileOutputStream archivo = new java.io.FileOutputStream(archivoXLS);
+    	            org.apache.poi.ss.usermodel.Sheet hoja = libro.createSheet("Reporte Ahorra Ya");
+
+    	           
+    	            javax.swing.table.TableModel modelo = table.getModel();
+    	            org.apache.poi.ss.usermodel.Row filaEnc = hoja.createRow(0);
+    	            for (int c = 0; c < modelo.getColumnCount(); c++) {
+    	                filaEnc.createCell(c).setCellValue(modelo.getColumnName(c));
+    	            }
+
+    	           
+    	            for (int f = 0; f < modelo.getRowCount(); f++) {
+    	                org.apache.poi.ss.usermodel.Row fila = hoja.createRow(f + 1);
+    	                for (int c = 0; c < modelo.getColumnCount(); c++) {
+    	                    Object val = modelo.getValueAt(f, c);
+    	                    fila.createCell(c).setCellValue(val != null ? val.toString() : "");
+    	                }
+    	            }
+
+    	            
+    	            int filaRes = modelo.getRowCount() + 2;
+
+    	            
+    	            double totalIngresos = ConsultasBD.getTotalIngresos(cod_use);
+    	            double totalGastos   = ConsultasBD.getTotalGastos(cod_use);
+    	            double saldo         = ConsultasBD.getSaldo(cod_use);
+    	            String[][] resumen = {
+    	                {"Total Ingresos",   String.format("$ %.2f", totalIngresos)},
+    	                {"Total Gastos",     String.format("$ %.2f", totalGastos)},
+    	                {"Saldo Disponible", String.format("$ %.2f", saldo)}
+    	            };
+    	            for (int i = 0; i < resumen.length; i++) {
+    	                org.apache.poi.ss.usermodel.Row r = hoja.createRow(filaRes + i);
+    	                r.createCell(0).setCellValue(resumen[i][0]);
+    	                r.createCell(1).setCellValue(resumen[i][1]);
+    	            }
+
+    	            libro.write(archivo);
+    	            archivo.close();
+
+    	            
+    	            java.awt.Desktop.getDesktop().open(archivoXLS);
+
+    	            JOptionPane.showMessageDialog(null,
+    	                "Reporte guardado correctamente.\n\nUbicación:\n" + ruta,
+    	                "Exportación exitosa", JOptionPane.INFORMATION_MESSAGE);
+
+    	        } catch (Exception ex) {
+    	            ex.printStackTrace();
+    	            JOptionPane.showMessageDialog(null,
+    	                "Error al exportar: " + ex.getMessage(),
+    	                "Error", JOptionPane.ERROR_MESSAGE);
+    	        }
+    	    }
+    
     }
+	
 	
 }
