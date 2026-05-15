@@ -163,7 +163,7 @@ public class GUI_GASTO extends JFrame {
                 }
             }
         });
-        btnguardar.setBounds(8, 255, 282, 35);
+        btnguardar.setBounds(8, 272, 282, 35);
         btnguardar.setBackground(new Color(46, 204, 113));
         btnguardar.setForeground(Color.WHITE);
         btnguardar.setFocusPainted(false);
@@ -194,11 +194,11 @@ public class GUI_GASTO extends JFrame {
         btn_eliminar.setFocusPainted(false);
         btn_eliminar.setBorderPainted(false);
         btn_eliminar.setBackground(Color.RED);
-        btn_eliminar.setBounds(8, 345, 282, 31);
+        btn_eliminar.setBounds(8, 318, 282, 31);
         card.add(btn_eliminar);
  
         table_gas = new JTable();
-        table_gas.setBounds(8, 388, 282, 98);
+        table_gas.setBounds(8, 360, 282, 126);
         card.add(table_gas);
  
         JButton btnvolver = new JButton("Volver al Inicio");
