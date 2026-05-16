@@ -14,17 +14,16 @@ import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.awt.event.ActionEvent;
+import com.toedter.calendar.JDateChooser;
 
 public class GUI_INGRESOS extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JTextField textingreso;
-    private JComboBox comboBox_DIA;
-    private JComboBox comboBox_MES;
-    private JComboBox comboBox_AÑO;
     private JTextField textField;
     private JTable table_ing;
     private String cod_use;
+    private JDateChooser dateChooser;
 
     LocalDate hoy = LocalDate.now();
 
@@ -90,11 +89,12 @@ public class GUI_INGRESOS extends JFrame {
         			double monto = Double.parseDouble(textingreso.getText());
         	        String descripcion = textField.getText();
 
-        	        int dia = Integer.parseInt(comboBox_DIA.getSelectedItem().toString());
-        	        int mes = comboBox_MES.getSelectedIndex() + 1;
-        	        int anio = Integer.parseInt(comboBox_AÑO.getSelectedItem().toString());
-
-        	        java.sql.Date fecha = java.sql.Date.valueOf(LocalDate.of(anio, mes, dia));
+        	        java.util.Date fechaUtil = dateChooser.getDate();
+        	        if (fechaUtil == null) {
+        	            JOptionPane.showMessageDialog(null, "Selecciona una fecha");
+        	            return;
+        	        }
+        	        java.sql.Date fecha = new java.sql.Date(fechaUtil.getTime());
 
         	        Ingreso ing = new Ingreso(null, cod_use, monto, descripcion, fecha);
         	        boolean ok = ConsultasBD.guardarIngreso(ing);
@@ -126,24 +126,6 @@ public class GUI_INGRESOS extends JFrame {
         lblFecha.setFont(new Font("Tahoma", Font.PLAIN, 13));
         lblFecha.setBounds(8, 35, 121, 14);
         card.add(lblFecha);
-
-        comboBox_DIA = new JComboBox();
-        comboBox_DIA.setModel(new DefaultComboBoxModel(new String[]{"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"}));
-        comboBox_DIA.setSelectedIndex(hoy.getDayOfMonth() - 1);
-        comboBox_DIA.setBounds(8, 59, 86, 22);
-        card.add(comboBox_DIA);
-
-        comboBox_MES = new JComboBox();
-        comboBox_MES.setModel(new DefaultComboBoxModel(new String[]{"ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"}));
-        comboBox_MES.setSelectedIndex(hoy.getMonthValue() - 1);
-        comboBox_MES.setBounds(100, 59, 92, 22);
-        card.add(comboBox_MES);
-
-        comboBox_AÑO = new JComboBox();
-        comboBox_AÑO.setModel(new DefaultComboBoxModel(new String[]{"2026","2027","2028","2029","2030","2031","2032","2033","2034","2035"}));
-        comboBox_AÑO.setSelectedItem(String.valueOf(hoy.getYear()));
-        comboBox_AÑO.setBounds(198, 59, 92, 22);
-        card.add(comboBox_AÑO);
 
        
         table_ing = new JTable();
@@ -189,6 +171,10 @@ public class GUI_INGRESOS extends JFrame {
         });
 
         card.add(btnVolver);
+        
+        dateChooser = new JDateChooser();
+        dateChooser.setBounds(8, 59, 282, 18);
+        card.add(dateChooser);
 
        
         cargarTabla();

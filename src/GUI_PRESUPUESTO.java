@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
+import com.toedter.calendar.JDateChooser;
 
 public class GUI_PRESUPUESTO extends JFrame {
 
@@ -25,11 +26,10 @@ public class GUI_PRESUPUESTO extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private String cod_use;
-	private JComboBox comboBox_DIA;
-	private JComboBox comboBox_MES;
-    private JComboBox comboBox_AÑO;
-    LocalDate hoy = LocalDate.now();
     private JLabel lblsaldo;
+    private JDateChooser dateChooserInicio;
+    private JDateChooser dateChooserCorte; 
+   
 
 	/**
 	 * Launch the application.
@@ -87,17 +87,18 @@ public class GUI_PRESUPUESTO extends JFrame {
         JButton btn_guardarp = new JButton("Guardar presupuesto");
         btn_guardarp.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
+            	try {
+                    if (dateChooserInicio.getDate() == null || dateChooserCorte.getDate() == null) {
+                        JOptionPane.showMessageDialog(null, "Selecciona ambas fechas");
+                        return;
+                    }
                     double monto = Double.parseDouble(textField.getText());
- 
-                    int dia  = Integer.parseInt(comboBox_DIA.getSelectedItem().toString());
-                    int mes  = comboBox_MES.getSelectedIndex() + 1;
-                    int anio = Integer.parseInt(comboBox_AÑO.getSelectedItem().toString());
-                    java.sql.Date fecha = java.sql.Date.valueOf(LocalDate.of(anio, mes, dia));
- 
-                    Presupuesto pre = new Presupuesto(null, cod_use, monto, fecha);
+                    java.sql.Date fechaInicio = new java.sql.Date(dateChooserInicio.getDate().getTime());
+                    java.sql.Date fechaCorte  = new java.sql.Date(dateChooserCorte.getDate().getTime());
+
+                    Presupuesto pre = new Presupuesto(null, cod_use, monto, fechaInicio, fechaCorte);
                     boolean ok = ConsultasBD.guardarPresupuesto(pre);
- 
+
                     if (ok) {
                         JOptionPane.showMessageDialog(null, "Presupuesto guardado correctamente");
                         actualizarDisponible();
@@ -119,36 +120,27 @@ public class GUI_PRESUPUESTO extends JFrame {
         JButton btn_actualizar = new JButton("Actualizar presupuesto");
         btn_actualizar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
+            	try {
+                    if (dateChooserInicio.getDate() == null || dateChooserCorte.getDate() == null) {
+                        JOptionPane.showMessageDialog(null, "Selecciona ambas fechas");
+                        return;
+                    }
                     double montoNuevo = Double.parseDouble(textField.getText());
- 
-                    int dia  = Integer.parseInt(comboBox_DIA.getSelectedItem().toString());
-                    int mes  = comboBox_MES.getSelectedIndex() + 1;
-                    int anio = Integer.parseInt(comboBox_AÑO.getSelectedItem().toString());
-                    java.sql.Date fecha = java.sql.Date.valueOf(LocalDate.of(anio, mes, dia));
- 
+                    java.sql.Date fechaInicio = new java.sql.Date(dateChooserInicio.getDate().getTime());
+                    java.sql.Date fechaCorte  = new java.sql.Date(dateChooserCorte.getDate().getTime());
+
                     LinkedList<Presupuesto> lista = ConsultasBD.getPresupuestos(cod_use);
                     if (lista.isEmpty()) {
-                        Presupuesto pre = new Presupuesto(null, cod_use, montoNuevo, fecha);
-                        ConsultasBD.guardarPresupuesto(pre);
+                        ConsultasBD.guardarPresupuesto(new Presupuesto(null, cod_use, montoNuevo, fechaInicio, fechaCorte));
                         JOptionPane.showMessageDialog(null, "Presupuesto guardado correctamente");
                     } else {
-                        for (Presupuesto p : lista) {
-                            ConsultasBD.eliminarPresupuesto(p.getPre_codigo());
-                        }
-                        Presupuesto preNuevo = new Presupuesto(null, cod_use, montoNuevo, fecha);
-                        boolean ok = ConsultasBD.guardarPresupuesto(preNuevo);
- 
-                        if (ok) {
-                            JOptionPane.showMessageDialog(null, "Presupuesto actualizado a $" +
-                                String.format("%.2f", montoNuevo));
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Error al actualizar");
-                        }
+                        for (Presupuesto p : lista) ConsultasBD.eliminarPresupuesto(p.getPre_codigo());
+                        boolean ok = ConsultasBD.guardarPresupuesto(new Presupuesto(null, cod_use, montoNuevo, fechaInicio, fechaCorte));
+                        JOptionPane.showMessageDialog(null, ok
+                            ? "Presupuesto actualizado a $" + String.format("%.2f", montoNuevo)
+                            : "Error al actualizar");
                     }
- 
                     actualizarDisponible();
- 
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(null, "Ingresa un monto valido");
@@ -162,9 +154,9 @@ public class GUI_PRESUPUESTO extends JFrame {
         btn_actualizar.setFont(new Font("Tahoma", Font.BOLD, 12));
         card.add(btn_actualizar);
  
-        JLabel lblNewLabel_1_1 = new JLabel("Fecha");
+        JLabel lblNewLabel_1_1 = new JLabel("Fecha de inicio");
         lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        lblNewLabel_1_1.setBounds(10, 166, 121, 14);
+        lblNewLabel_1_1.setBounds(10, 146, 121, 14);
         card.add(lblNewLabel_1_1);
  
         JLabel lblNewLabel_1_2 = new JLabel("Disponible");
@@ -197,24 +189,19 @@ public class GUI_PRESUPUESTO extends JFrame {
         btnVolverAlInicio_1.setBackground(new Color(233, 30, 99));
         btnVolverAlInicio_1.setBounds(10, 435, 295, 28);
         card.add(btnVolverAlInicio_1);
- 
-        comboBox_MES = new JComboBox();
-        comboBox_MES.setModel(new DefaultComboBoxModel(new String[]{"ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"}));
-        comboBox_MES.setSelectedIndex(hoy.getMonthValue() - 1);
-        comboBox_MES.setBounds(102, 190, 92, 22);
-        card.add(comboBox_MES);
- 
-        comboBox_AÑO = new JComboBox();
-        comboBox_AÑO.setModel(new DefaultComboBoxModel(new String[]{"2026","2027","2028","2029","2030","2031","2032","2033","2034","2035"}));
-        comboBox_AÑO.setSelectedItem(String.valueOf(hoy.getYear()));
-        comboBox_AÑO.setBounds(200, 190, 92, 22);
-        card.add(comboBox_AÑO);
- 
-        comboBox_DIA = new JComboBox();
-        comboBox_DIA.setModel(new DefaultComboBoxModel(new String[]{"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"}));
-        comboBox_DIA.setSelectedIndex(hoy.getDayOfMonth() - 1);
-        comboBox_DIA.setBounds(10, 190, 86, 22);
-        card.add(comboBox_DIA);
+        
+        dateChooserInicio = new JDateChooser();
+        dateChooserInicio.setBounds(10, 170, 282, 18);
+        card.add(dateChooserInicio);
+        
+        JLabel lblNewLabel_1_1_1 = new JLabel("Fecha de corte");
+        lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        lblNewLabel_1_1_1.setBounds(10, 198, 121, 14);
+        card.add(lblNewLabel_1_1_1);
+        
+        dateChooserCorte = new JDateChooser();
+        dateChooserCorte.setBounds(10, 220, 282, 18);
+        card.add(dateChooserCorte);
  
         actualizarDisponible();
     }

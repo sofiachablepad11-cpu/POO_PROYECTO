@@ -119,51 +119,63 @@ public class GUI_ALARMAS extends JFrame {
         cargarAlertas();
     }
  
-    private void cargarAlertas() {
-        double presupuesto = ConsultasBD.getTotalPresupuesto(cod_use);
-        double ingresos    = ConsultasBD.getTotalIngresos(cod_use);
-        double gastos      = ConsultasBD.getTotalGastos(cod_use);
-        double saldo       = ConsultasBD.getSaldo(cod_use);
- 
-        if (gastos > presupuesto) {
-            modelo.addRow(new Object[]{
-                "PRESUPUESTO", "Tus gastos ($" + String.format("%.2f", gastos) +") superan tu presupuesto ($" + String.format("%.2f", presupuesto) + ")"
-            });
-        }
- 
-        if (saldo < 0) {
-            modelo.addRow(new Object[]{
-                "SALDO", "Tu saldo es negativo: $" + String.format("%.2f", saldo)
-            });
-        }
- 
-        LinkedList<Apartado> apartados = ConsultasBD.getApartados(cod_use);
-        LinkedList<Gasto> listaGastos  = ConsultasBD.getGastos(cod_use);
- 
-        for (Apartado apa : apartados) {
-            String categoria = apa.getApa_categoria();
-            double limite    = apa.getApa_limite();
-            double totalCat  = 0;
- 
-   
-            for (Gasto g : listaGastos) {
-                if (g.getGas_categoria().equalsIgnoreCase(categoria)) {
-                    totalCat += g.getGas_monto();
-                }
-            }
- 
-            if (totalCat > limite) {
-                modelo.addRow(new Object[]{
-                    "LIMITE " + categoria, "Gastaste $" + String.format("%.2f", totalCat) + " en " + categoria + ", tu limite era $" + String.format("%.2f", limite)
-                });
-            }
-        }
- 
-        if (modelo.getRowCount() == 0) {
-            modelo.addRow(new Object[]{
-                "OK", "Todo esta en orden"
-            });
-        }
-    }
+	private void cargarAlertas() {
+	    double presupuesto = ConsultasBD.getTotalPresupuesto(cod_use);
+	    double gastos      = ConsultasBD.getTotalGastos(cod_use);
+	    double saldo       = ConsultasBD.getSaldo(cod_use);
+
+	    // Alarma 1: gastos al limite del presupuesto
+	    if (gastos >= presupuesto && presupuesto > 0) {
+	        modelo.addRow(new Object[]{
+	            "PRESUPUESTO",
+	            "Alcanzaste tu limite de $" + String.format("%.2f", presupuesto)
+	        });
+	    }
+
+	    // Alarma 2: saldo negativo
+	    if (saldo < 0) {
+	        modelo.addRow(new Object[]{
+	            "SALDO", "Tu saldo es negativo: $" + String.format("%.2f", saldo)
+	        });
+	    }
+
+	    // Alarma 3: fecha de corte mañana
+	    LinkedList<Presupuesto> presupuestos = ConsultasBD.getPresupuestos(cod_use);
+	    java.time.LocalDate manana = java.time.LocalDate.now().plusDays(1);
+	    for (Presupuesto p : presupuestos) {
+	        if (p.getPre_fecha_final() != null) {
+	            java.time.LocalDate corte = p.getPre_fecha_final().toLocalDate();
+	            if (corte.equals(manana)) {
+	                modelo.addRow(new Object[]{
+	                    "CORTE",
+	                    "Tu presupuesto vence mañana (" + manana + ")"
+	                });
+	            }
+	        }
+	    }
+
+	    // Alarma 4: limites por apartado (sin cambios)
+	    LinkedList<Apartado> apartados    = ConsultasBD.getApartados(cod_use);
+	    LinkedList<Gasto>    listaGastos  = ConsultasBD.getGastos(cod_use);
+	    for (Apartado apa : apartados) {
+	        String categoria = apa.getApa_categoria();
+	        double limite    = apa.getApa_limite();
+	        double totalCat  = 0;
+	        for (Gasto g : listaGastos) {
+	            if (g.getGas_categoria().equalsIgnoreCase(categoria))
+	                totalCat += g.getGas_monto();
+	        }
+	        if (totalCat > limite) {
+	            modelo.addRow(new Object[]{
+	                "LIMITE " + categoria,
+	                "Gastaste $" + String.format("%.2f", totalCat) + " en " + categoria +
+	                ", tu limite era $" + String.format("%.2f", limite)
+	            });
+	        }
+	    }
+
+	    if (modelo.getRowCount() == 0) {
+	        modelo.addRow(new Object[]{ "OK", "Todo esta en orden" });
+	    }
+	}
 }
- 
