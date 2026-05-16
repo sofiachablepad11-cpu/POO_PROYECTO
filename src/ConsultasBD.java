@@ -267,7 +267,8 @@ public class ConsultasBD {
                     rs.getString("PRE_CODIGO"),
                     rs.getString("USU_CODIGO"),
                     rs.getDouble("PRE_MONTO_TOTAL"),
-                    rs.getDate("PRE_FECHA")
+                    rs.getDate("PRE_FECHA_INICIO"),
+                    rs.getDate("PRE_FECHA_FINAL")
                 );
                 lista.add(pre);
             }
@@ -299,12 +300,13 @@ public class ConsultasBD {
     public static boolean guardarPresupuesto(Presupuesto pre) {
         try {
             Connection con = CONECTA.conectar();
-            String sql = "INSERT INTO presupuesto (\"USU_CODIGO\", \"PRE_MONTO_TOTAL\", \"PRE_FECHA\") VALUES (?, ?, ?)";
+            String sql = "INSERT INTO presupuesto (\"USU_CODIGO\", \"PRE_MONTO_TOTAL\", \"PRE_FECHA_INICIO\", \"PRE_FECHA_FINAL\") VALUES (?, ?, ?,?)";
             PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setObject(1, java.util.UUID.fromString(pre.getUsu_codigo()));
             ps.setDouble(2, pre.getPre_monto_total());
-            ps.setDate(3, pre.getPre_fecha());
+            ps.setDate(3, pre.getPre_fecha_inicio());
+            ps.setDate(4, pre.getPre_fecha_final());
 
             ps.executeUpdate();
             con.close();
