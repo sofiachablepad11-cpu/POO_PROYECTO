@@ -263,4 +263,28 @@ public class GUI_GASTO extends JFrame {
         dateChooser.setDate(new java.util.Date());
         card.add(dateChooser);
     }
+	private void cargarTablaGastos() {
+	    LinkedList<Gasto> lista = ConsultasBD.getGastos(cod_use);
+
+	    DefaultTableModel modelo = new DefaultTableModel();
+	    modelo.addColumn("Codigo");
+	    modelo.addColumn("Monto");
+	    modelo.addColumn("Categoria");
+	    modelo.addColumn("Descripcion");
+	    modelo.addColumn("Fecha");
+
+	    for (Gasto g : lista) {
+	        modelo.addRow(new Object[]{
+	            g.getGas_codigo(),
+	            String.format("$ %.2f", g.getGas_monto()),
+	            g.getGas_categoria(),
+	            g.getGas_descripcion(),
+	            g.getGas_fecha()
+	        });
+	    }
+
+	    table_gas.setModel(modelo);
+	    table_gas.getColumnModel().getColumn(0).setMinWidth(0);
+	    table_gas.getColumnModel().getColumn(0).setMaxWidth(0);
+	}
 }
