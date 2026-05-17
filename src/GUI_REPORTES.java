@@ -215,6 +215,7 @@ public class GUI_REPORTES extends JFrame {
         lblFecha.setBounds(10, 24, 121, 14);
         card.add(lblFecha);
         
+        actualizarTotales();
         
     }
     private void actualizarTotales() {
