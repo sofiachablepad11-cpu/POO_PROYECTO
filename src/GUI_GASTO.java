@@ -262,6 +262,8 @@ public class GUI_GASTO extends JFrame {
         dateChooser.setBounds(8, 59, 282, 18);
         dateChooser.setDate(new java.util.Date());
         card.add(dateChooser);
+        
+        cargarTablaGastos();
     }
 	private void cargarTablaGastos() {
 	    LinkedList<Gasto> lista = ConsultasBD.getGastos(cod_use);
