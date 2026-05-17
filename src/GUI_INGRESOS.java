@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -129,8 +130,10 @@ public class GUI_INGRESOS extends JFrame {
 
        
         table_ing = new JTable();
-        table_ing.setBounds(8, 317, 282, 146);
-        card.add(table_ing);
+        JScrollPane scroll = new JScrollPane(table_ing);
+        scroll.setBounds(8, 317, 282, 146);
+        card.add(scroll);
+        
 
        
         JButton btnEliminar = new JButton("Eliminar");
