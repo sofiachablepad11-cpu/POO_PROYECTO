@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 import conec.CONECTA;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
@@ -155,8 +156,9 @@ public class GUI_REPORTES extends JFrame {
         card.add(lblMovimientos);
 
         table = new JTable();
-        table.setBounds(10, 345, 295, 110);
-        card.add(table);
+        JScrollPane scroll = new JScrollPane(table);
+        scroll.setBounds(10, 345, 295, 110);
+        card.add(scroll);
 
         JButton btnVerDetalles = new JButton("Ver movimientos");
         btnVerDetalles.setFont(new Font("Segoe UI", Font.PLAIN, 14));
