@@ -225,7 +225,7 @@ public class GUI_INGRESOS extends JFrame {
         btneditar.setFocusPainted(false);
         btneditar.setBorderPainted(false);
         btneditar.setBackground(new Color(0, 120, 215));
-        btneditar.setBounds(151, 263, 131, 31);
+        btneditar.setBounds(151, 263, 139, 31);
         card.add(btneditar);
 
        
