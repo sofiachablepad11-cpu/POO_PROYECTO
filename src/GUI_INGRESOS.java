@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JComboBox;
@@ -26,7 +27,7 @@ public class GUI_INGRESOS extends JFrame {
     private String cod_use;
     private JDateChooser dateChooser;
     private String codigoEditando = null; 
-
+    private JPopupMenu popupMenu;
     LocalDate hoy = LocalDate.now();
 
     public static void main(String[] args) {
@@ -151,32 +152,92 @@ public class GUI_INGRESOS extends JFrame {
         JScrollPane scroll = new JScrollPane(table_ing);
         scroll.setBounds(8, 317, 282, 146);
         card.add(scroll);
+
+        // POPUP MENU
+        popupMenu = new JPopupMenu();
+        javax.swing.JMenuItem itemEliminar = new javax.swing.JMenuItem("Eliminar");
+        itemEliminar.setForeground(Color.RED);
+        itemEliminar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int fila = table_ing.getSelectedRow();
+                if (fila == -1) {
+                    JOptionPane.showMessageDialog(null, "Selecciona un ingreso");
+                    return;
+                }
+                String codigo = table_ing.getValueAt(fila, 0).toString();
+                boolean ok = ConsultasBD.eliminarIngreso(codigo);
+                if (ok) {
+                    JOptionPane.showMessageDialog(null, "Ingreso eliminado");
+                    cargarTabla();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error al eliminar");
+                }
+            }
+        });
+
+        javax.swing.JMenuItem itemEditar = new javax.swing.JMenuItem("Editar");
+        itemEditar.setForeground(new Color(0, 120, 215));
+        itemEditar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int fila = table_ing.getSelectedRow();
+                if (fila == -1) {
+                    JOptionPane.showMessageDialog(null, "Selecciona un ingreso para editar");
+                    return;
+                }
+                codigoEditando = table_ing.getValueAt(fila, 0).toString();
+                String monto = table_ing.getValueAt(fila, 1).toString();
+                String descripcion = table_ing.getValueAt(fila, 2).toString();
+                textingreso.setText(monto);
+                textField.setText(descripcion);
+                btnguardar.setText("Actualizar");
+            }
+        });
+
+        popupMenu.add(itemEditar);
+        popupMenu.add(itemEliminar);
+
+       
+        table_ing.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                if (e.isPopupTrigger()) mostrarPopup(e);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent e) {
+                if (e.isPopupTrigger()) mostrarPopup(e);
+            }
+            private void mostrarPopup(java.awt.event.MouseEvent e) {
+                int fila = table_ing.rowAtPoint(e.getPoint());
+                if (fila >= 0) {
+                    table_ing.setRowSelectionInterval(fila, fila); 
+                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
         
 
        
         JButton btnEliminar = new JButton("Eliminar");
+        btnEliminar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		int fila = table_ing.getSelectedRow();
+        		if (fila == -1) {
+        			JOptionPane.showMessageDialog(null, "Selecciona un ingreso");
+        			return;
+        			}
+        		String codigo = table_ing.getValueAt(fila, 0).toString();
+        	    boolean ok = ConsultasBD.eliminarIngreso(codigo);
+        	    if (ok) {
+        	    	JOptionPane.showMessageDialog(null, "Ingreso eliminado");
+        	    	cargarTabla(); 
+        	    	} else {
+        	    		JOptionPane.showMessageDialog(null, "Error al eliminar");
+        	            }
+        	    }
+        	});
+
         btnEliminar.setBounds(8, 263, 121, 31);
         btnEliminar.setBackground(Color.RED);
         btnEliminar.setForeground(Color.WHITE);
-        btnEliminar.addActionListener(e -> {
-            int fila = table_ing.getSelectedRow();
-
-            if (fila == -1) {
-                JOptionPane.showMessageDialog(null, "Selecciona un ingreso");
-                return;
-            }
-
-            String codigo = table_ing.getValueAt(fila, 0).toString();
-            boolean ok = ConsultasBD.eliminarIngreso(codigo);
-
-            if (ok) {
-                JOptionPane.showMessageDialog(null, "Ingreso eliminado");
-                cargarTabla(); 
-            } else {
-                JOptionPane.showMessageDialog(null, "Error al eliminar");
-            }
-        });
-
+       
         card.add(btnEliminar);
 
     
