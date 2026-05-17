@@ -25,6 +25,7 @@ public class GUI_INGRESOS extends JFrame {
     private JTable table_ing;
     private String cod_use;
     private JDateChooser dateChooser;
+    private String codigoEditando = null; 
 
     LocalDate hoy = LocalDate.now();
 
@@ -86,33 +87,50 @@ public class GUI_INGRESOS extends JFrame {
         JButton btnguardar = new JButton("Guardar");
         btnguardar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		try {
-        			double monto = Double.parseDouble(textingreso.getText());
-        	        String descripcion = textField.getText();
 
-        	        java.util.Date fechaUtil = dateChooser.getDate();
-        	        if (fechaUtil == null) {
-        	            JOptionPane.showMessageDialog(null, "Selecciona una fecha");
-        	            return;
-        	        }
-        	        java.sql.Date fecha = new java.sql.Date(fechaUtil.getTime());
+        		        try {
+        		            double monto = Double.parseDouble(textingreso.getText());
+        		            String descripcion = textField.getText();
 
-        	        Ingreso ing = new Ingreso(null, cod_use, monto, descripcion, fecha);
-        	        boolean ok = ConsultasBD.guardarIngreso(ing);
+        		            java.util.Date fechaUtil = dateChooser.getDate();
+        		            if (fechaUtil == null) {
+        		                JOptionPane.showMessageDialog(null, "Selecciona una fecha");
+        		                return;
+        		            }
+        		            java.sql.Date fecha = new java.sql.Date(fechaUtil.getTime());
 
-        	        if (ok) {
-        	        	JOptionPane.showMessageDialog(null, "Ingreso guardado");
-        	        	cargarTabla(); 
-        	        	textingreso.setText("");
-        	        	textField.setText("");
-        	        	} else {
-        	        		JOptionPane.showMessageDialog(null, "Error al guardar");
-        	        		}
-        	        } catch (Exception ex) {
-        	        	JOptionPane.showMessageDialog(null, "Ingresa un monto válido");
-        	        	}
-        		}
-        	});
+        		            if (codigoEditando != null) {
+        		                
+        		                ConsultasBD.eliminarIngreso(codigoEditando);
+        		                Ingreso ing = new Ingreso(null, cod_use, monto, descripcion, fecha);
+        		                boolean ok = ConsultasBD.guardarIngreso(ing);
+        		                if (ok) {
+        		                    JOptionPane.showMessageDialog(null, "Ingreso actualizado");
+        		                    codigoEditando = null; // reset
+        		                    btnguardar.setText("Guardar");
+        		                } else {
+        		                    JOptionPane.showMessageDialog(null, "Error al actualizar");
+        		                }
+        		            } else {
+        		                
+        		                Ingreso ing = new Ingreso(null, cod_use, monto, descripcion, fecha);
+        		                boolean ok = ConsultasBD.guardarIngreso(ing);
+        		                if (ok) {
+        		                    JOptionPane.showMessageDialog(null, "Ingreso guardado");
+        		                } else {
+        		                    JOptionPane.showMessageDialog(null, "Error al guardar");
+        		                }
+        		            }
+
+        		            cargarTabla();
+        		            textingreso.setText("");
+        		            textField.setText("");
+
+        		        } catch (Exception ex) {
+        		            JOptionPane.showMessageDialog(null, "Ingresa un monto válido");
+        		        }
+        		    }
+        		});
       
         btnguardar.setBounds(8, 217, 282, 35);
         btnguardar.setBackground(new Color(46, 204, 113));
@@ -137,7 +155,7 @@ public class GUI_INGRESOS extends JFrame {
 
        
         JButton btnEliminar = new JButton("Eliminar");
-        btnEliminar.setBounds(8, 263, 282, 31);
+        btnEliminar.setBounds(8, 263, 121, 31);
         btnEliminar.setBackground(Color.RED);
         btnEliminar.setForeground(Color.WHITE);
         btnEliminar.addActionListener(e -> {
@@ -182,6 +200,33 @@ public class GUI_INGRESOS extends JFrame {
         dateChooser.setBounds(8, 59, 282, 18);
         dateChooser.setDate(new java.util.Date());
         card.add(dateChooser);
+        
+        JButton btneditar = new JButton("Editar");
+        btneditar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		int fila = table_ing.getSelectedRow();
+
+                if (fila == -1) {
+                    JOptionPane.showMessageDialog(null, "Selecciona un ingreso para editar");
+                    return;
+                }
+
+                codigoEditando = table_ing.getValueAt(fila, 0).toString();
+                String monto = table_ing.getValueAt(fila, 1).toString();
+                String descripcion = table_ing.getValueAt(fila, 2).toString();
+
+                textingreso.setText(monto);
+                textField.setText(descripcion);
+                btnguardar.setText("Actualizar");
+            }
+        });
+        btneditar.setForeground(Color.WHITE);
+        btneditar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btneditar.setFocusPainted(false);
+        btneditar.setBorderPainted(false);
+        btneditar.setBackground(new Color(0, 120, 215));
+        btneditar.setBounds(151, 263, 131, 31);
+        card.add(btneditar);
 
        
         cargarTabla();
