@@ -246,5 +246,27 @@ public class GUI_APARTADO extends JFrame {
         dateChooser.setDate(new java.util.Date());
         card.add(dateChooser);
     }
+	private void cargarTablaApartados() {
+	    LinkedList<Apartado> lista = ConsultasBD.getApartados(cod_use);
+
+	    DefaultTableModel modelo = new DefaultTableModel();
+	    modelo.addColumn("Codigo");
+	    modelo.addColumn("Limite");
+	    modelo.addColumn("Categoria");
+	    modelo.addColumn("Fecha");
+
+	    for (Apartado a : lista) {
+	        modelo.addRow(new Object[]{
+	            a.getApa_codigo(),
+	            String.format("$ %.2f", a.getApa_limite()),
+	            a.getApa_categoria(),
+	            a.getApa_fecha()
+	        });
+	    }
+
+	    table.setModel(modelo);
+	    table.getColumnModel().getColumn(0).setMinWidth(0);
+	    table.getColumnModel().getColumn(0).setMaxWidth(0);
+	}
 }
  
