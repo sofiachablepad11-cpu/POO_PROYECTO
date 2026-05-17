@@ -173,7 +173,7 @@ public class GUI_APARTADO extends JFrame {
         btn_eliminar.setFocusPainted(false);
         btn_eliminar.setBorderPainted(false);
         btn_eliminar.setBackground(Color.RED);
-        btn_eliminar.setBounds(10, 269, 282, 31);
+        btn_eliminar.setBounds(10, 269, 131, 31);
         card.add(btn_eliminar);
  
         table = new JTable();
@@ -201,6 +201,15 @@ public class GUI_APARTADO extends JFrame {
         dateChooser.setBounds(10, 58, 282, 18);
         dateChooser.setDate(new java.util.Date());
         card.add(dateChooser);
+        
+        JButton btneditar = new JButton("Editar");
+        btneditar.setForeground(Color.WHITE);
+        btneditar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btneditar.setFocusPainted(false);
+        btneditar.setBorderPainted(false);
+        btneditar.setBackground(new Color(0, 120, 215));
+        btneditar.setBounds(152, 269, 141, 31);
+        card.add(btneditar);
         
         cargarTablaApartados();
     }
