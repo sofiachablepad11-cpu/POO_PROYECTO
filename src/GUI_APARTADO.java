@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
@@ -220,8 +221,9 @@ public class GUI_APARTADO extends JFrame {
         card.add(btn_eliminar);
  
         table = new JTable();
-        table.setBounds(10, 311, 282, 175);
-        card.add(table);
+        JScrollPane scroll = new JScrollPane(table);
+        scroll.setBounds(10, 311, 282, 175);
+        card.add(scroll);
 
         JButton btnvolver = new JButton("Volver al Inicio");
         btnvolver.addActionListener(new ActionListener() {
