@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
@@ -78,8 +79,9 @@ public class GUI_ALARMAS extends JFrame {
         modelo.addColumn("Mensaje");
  
         table = new JTable(modelo);
-        table.setBounds(10, 100, 273, 215);
-        card.add(table);
+        JScrollPane scroll = new JScrollPane(table);
+        scroll.setBounds(10, 100, 273, 215);
+        card.add(scroll);
  
         JButton btnMarcar = new JButton("Marcar como leidas");
         btnMarcar.addActionListener(new ActionListener() {
