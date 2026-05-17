@@ -93,7 +93,7 @@ public class GUI_GASTO extends JFrame {
         card.add(lblMonto);
  
         textingreso = new JTextField();
-        textingreso.setBounds(8, 115, 282, 25);
+        textingreso.setBounds(8, 115, 297, 25);
         card.add(textingreso);
  
         JLabel lblCategoria = new JLabel("Categoria");
@@ -103,7 +103,7 @@ public class GUI_GASTO extends JFrame {
  
         comboBox_categoria = new JComboBox();
         comboBox_categoria.setModel(new DefaultComboBoxModel(new String[] {"COMIDA","TRANSPORTE","VIVIENDA","SERVICIOS","COMPRAS","ENTRETENIMIENTO","SALUD","EDUCACION","ROPA","MASCOTA"}));
-        comboBox_categoria.setBounds(8, 167, 282, 22);
+        comboBox_categoria.setBounds(8, 167, 297, 22);
         card.add(comboBox_categoria);
  
         JLabel lblDescripcion = new JLabel("Descripcion");
@@ -113,7 +113,7 @@ public class GUI_GASTO extends JFrame {
  
         textField = new JTextField();
         textField.setColumns(10);
-        textField.setBounds(8, 219, 282, 25);
+        textField.setBounds(8, 219, 297, 25);
         card.add(textField);
  
         JButton btnguardar = new JButton("Guardar");
@@ -152,7 +152,7 @@ public class GUI_GASTO extends JFrame {
                 }
             }
         });
-        btnguardar.setBounds(8, 272, 282, 35);
+        btnguardar.setBounds(8, 272, 297, 35);
         btnguardar.setBackground(new Color(46, 204, 113));
         btnguardar.setForeground(Color.WHITE);
         btnguardar.setFocusPainted(false);
@@ -190,12 +190,12 @@ public class GUI_GASTO extends JFrame {
         btn_eliminar.setFocusPainted(false);
         btn_eliminar.setBorderPainted(false);
         btn_eliminar.setBackground(Color.RED);
-        btn_eliminar.setBounds(8, 318, 282, 31);
+        btn_eliminar.setBounds(8, 318, 141, 31);
         card.add(btn_eliminar);
  
         table_gas = new JTable();
         JScrollPane scroll = new JScrollPane(table_gas);
-        scroll.setBounds(8, 360, 282, 126);
+        scroll.setBounds(8, 360, 297, 126);
         card.add(scroll);
  
         JButton btnvolver = new JButton("Volver al Inicio");
@@ -207,7 +207,7 @@ public class GUI_GASTO extends JFrame {
             }
         });
         btnvolver.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        btnvolver.setBounds(8, 495, 282, 34);
+        btnvolver.setBounds(8, 495, 297, 34);
         btnvolver.setBackground(new Color(233, 30, 99));
         btnvolver.setForeground(Color.WHITE);
         btnvolver.setFocusPainted(false);
@@ -215,9 +215,18 @@ public class GUI_GASTO extends JFrame {
         card.add(btnvolver);
         
         dateChooser = new JDateChooser();
-        dateChooser.setBounds(8, 59, 282, 18);
+        dateChooser.setBounds(8, 59, 297, 18);
         dateChooser.setDate(new java.util.Date());
         card.add(dateChooser);
+        
+        JButton btneditar = new JButton("Editar");
+        btneditar.setForeground(Color.WHITE);
+        btneditar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btneditar.setFocusPainted(false);
+        btneditar.setBorderPainted(false);
+        btneditar.setBackground(new Color(0, 120, 215));
+        btneditar.setBounds(159, 318, 146, 31);
+        card.add(btneditar);
         
         cargarTablaGastos();
     }
