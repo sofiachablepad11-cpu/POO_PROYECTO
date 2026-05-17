@@ -163,15 +163,18 @@ public class GUI_INGRESOS extends JFrame {
 
     
         JButton btnVolver = new JButton("Volver al Inicio");
+        btnVolver.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+                GUI_PANTALLA_PRINCIPAL PRE = new GUI_PANTALLA_PRINCIPAL(cod_use);
+                PRE.setVisible(true);
+                dispose();
+        	}
+        });
         btnVolver.setBounds(10, 495, 280, 34);
         btnVolver.setBackground(new Color(233, 30, 99));
         btnVolver.setForeground(Color.WHITE);
 
-        btnVolver.addActionListener(e -> {
-            GUI_PANTALLA_PRINCIPAL PRE = new GUI_PANTALLA_PRINCIPAL(cod_use);
-            PRE.setVisible(true);
-            dispose();
-        });
+
 
         card.add(btnVolver);
         
