@@ -312,4 +312,26 @@ public class GUI_REPORTES extends JFrame {
         }
         
     }
+    private void cargarMovimientos() {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Monto");
+        modelo.addColumn("Tipo");
+        modelo.addColumn("Fecha");
+
+        java.util.LinkedList<Ingreso> ingresos = ConsultasBD.getIngresos(cod_use);
+        for (Ingreso i : ingresos) {
+            modelo.addRow(new Object[]{
+                String.format("$ %.2f", i.getIng_monto()), "INGRESO", i.getIng_fecha()
+            });
+        }
+
+        java.util.LinkedList<Gasto> gastos = ConsultasBD.getGastos(cod_use);
+        for (Gasto g : gastos) {
+            modelo.addRow(new Object[]{
+                String.format("$ %.2f", g.getGas_monto()), "GASTO", g.getGas_fecha()
+            });
+        }
+
+        table.setModel(modelo);
+    }
 }
