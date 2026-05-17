@@ -124,31 +124,9 @@ public class GUI_APARTADO extends JFrame {
 
                      if (ok) {
                          JOptionPane.showMessageDialog(null, "Apartado guardado correctamente");
-
+                         cargarTablaApartados();
+                         textField.setText("");
                        
-                         LinkedList<Apartado> lista = ConsultasBD.getApartados(cod_use);
-
-                         DefaultTableModel modelo = new DefaultTableModel();
-                         modelo.addColumn("Codigo");
-                         modelo.addColumn("Limite");
-                         modelo.addColumn("Categoria");
-                         modelo.addColumn("Fecha");
-
-                         for (Apartado a : lista) {
-                             modelo.addRow(new Object[]{
-                                 a.getApa_codigo(),
-                                 String.format("$ %.2f", a.getApa_limite()),
-                                 a.getApa_categoria(),
-                                 a.getApa_fecha()
-                             });
-                         }
-
-                         table.setModel(modelo);
-
-                        
-                         table.getColumnModel().getColumn(0).setMinWidth(0);
-                         table.getColumnModel().getColumn(0).setMaxWidth(0);
-
                      } else {
                          JOptionPane.showMessageDialog(null, "Error al guardar apartado");
                      }
@@ -182,31 +160,9 @@ public class GUI_APARTADO extends JFrame {
 
                  if (ok) {
                      JOptionPane.showMessageDialog(null, "Apartado eliminado");
-
+                     cargarTablaApartados();
                     
-                     LinkedList<Apartado> lista = ConsultasBD.getApartados(cod_use);
-
-                     DefaultTableModel modelo = new DefaultTableModel();
-                     modelo.addColumn("Codigo");
-                     modelo.addColumn("Limite");
-                     modelo.addColumn("Categoria");
-                     modelo.addColumn("Fecha");
-
-                     for (Apartado a : lista) {
-                         modelo.addRow(new Object[]{
-                             a.getApa_codigo(),
-                             String.format("$ %.2f", a.getApa_limite()),
-                             a.getApa_categoria(),
-                             a.getApa_fecha()
-                         });
-                     }
-
-                     table.setModel(modelo);
-
-                     
-                     table.getColumnModel().getColumn(0).setMinWidth(0);
-                     table.getColumnModel().getColumn(0).setMaxWidth(0);
-
+                    
                  } else {
                      JOptionPane.showMessageDialog(null, "Error al eliminar");
                  }
@@ -245,6 +201,8 @@ public class GUI_APARTADO extends JFrame {
         dateChooser.setBounds(10, 58, 282, 18);
         dateChooser.setDate(new java.util.Date());
         card.add(dateChooser);
+        
+        cargarTablaApartados();
     }
 	private void cargarTablaApartados() {
 	    LinkedList<Apartado> lista = ConsultasBD.getApartados(cod_use);
