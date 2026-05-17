@@ -152,12 +152,12 @@ public class GUI_REPORTES extends JFrame {
 
         JLabel lblMovimientos = new JLabel("Movimientos");
         lblMovimientos.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        lblMovimientos.setBounds(10, 328, 121, 14);
+        lblMovimientos.setBounds(10, 310, 121, 14);
         card.add(lblMovimientos);
 
         table = new JTable();
         JScrollPane scroll = new JScrollPane(table);
-        scroll.setBounds(10, 345, 295, 110);
+        scroll.setBounds(10, 330, 295, 110);
         card.add(scroll);
 
         JButton btnVerDetalles = new JButton("Ver movimientos");
@@ -168,7 +168,7 @@ public class GUI_REPORTES extends JFrame {
                 actualizarTotales();   
             }
         });
-        btnVerDetalles.setBounds(10, 281, 295, 36);
+        btnVerDetalles.setBounds(10, 281, 295, 18);
         btnVerDetalles.setBackground(new Color(0, 120, 215));
         btnVerDetalles.setForeground(Color.WHITE);
         btnVerDetalles.setFocusPainted(false);
