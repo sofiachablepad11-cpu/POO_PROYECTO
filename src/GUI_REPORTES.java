@@ -214,7 +214,19 @@ public class GUI_REPORTES extends JFrame {
         lblFecha.setFont(new Font("Tahoma", Font.PLAIN, 13));
         lblFecha.setBounds(10, 24, 121, 14);
         card.add(lblFecha);
+        
+        
     }
+    private void actualizarTotales() {
+        double ing = ConsultasBD.getTotalIngresos(cod_use);
+        double gas = ConsultasBD.getTotalGastos(cod_use);
+        double pre = ConsultasBD.getTotalPresupuesto(cod_use);
+
+        totalIng.setText(String.format("$ %.2f", ing));
+        totalGas.setText(String.format("$ %.2f", gas));
+        totalPre.setText(String.format("$ %.2f", pre));
+    }
+    
 
     private void exportarExcel() {
         javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
@@ -293,6 +305,8 @@ public class GUI_REPORTES extends JFrame {
                     "Error al exportar: " + ex.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
             }
+        
         }
+        
     }
 }
