@@ -32,6 +32,7 @@ public class GUI_APARTADO extends JFrame {
     private DefaultTableModel modelo;
     private JComboBox comboBox_categoria;
     private JDateChooser dateChooser;
+    private String codigoEditando = null;
  
     LocalDate hoy = LocalDate.now();
 
@@ -107,34 +108,47 @@ public class GUI_APARTADO extends JFrame {
         JButton btnguardar = new JButton("Guardar");
         btnguardar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	 try {
-                     double limite = Double.parseDouble(textField.getText());
-                     String categoria = comboBox_categoria.getSelectedItem().toString();
+            	try {
+                    double limite = Double.parseDouble(textField.getText());
+                    String categoria = comboBox_categoria.getSelectedItem().toString();
 
-                     java.util.Date fechaUtil = dateChooser.getDate();
-                     if (fechaUtil == null) {
-                         JOptionPane.showMessageDialog(null, "Selecciona una fecha");
-                         return;
-                     }
-                     java.sql.Date fecha = new java.sql.Date(fechaUtil.getTime());
+                    java.util.Date fechaUtil = dateChooser.getDate();
+                    if (fechaUtil == null) {
+                        JOptionPane.showMessageDialog(null, "Selecciona una fecha");
+                        return;
+                    }
+                    java.sql.Date fecha = new java.sql.Date(fechaUtil.getTime());
 
-                     Apartado apa = new Apartado(null, cod_use, limite, categoria, fecha);
+                    if (codigoEditando != null) {
+                        
+                        ConsultasBD.eliminarApartado(codigoEditando);
+                        Apartado apa = new Apartado(null, cod_use, limite, categoria, fecha);
+                        boolean ok = ConsultasBD.guardarApartado(apa);
+                        if (ok) {
+                            JOptionPane.showMessageDialog(null, "Apartado actualizado");
+                            codigoEditando = null;
+                            btnguardar.setText("Guardar");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error al actualizar");
+                        }
+                    } else {
+                        
+                        Apartado apa = new Apartado(null, cod_use, limite, categoria, fecha);
+                        boolean ok = ConsultasBD.guardarApartado(apa);
+                        if (ok) {
+                            JOptionPane.showMessageDialog(null, "Apartado guardado correctamente");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error al guardar apartado");
+                        }
+                    }
 
-                     boolean ok = ConsultasBD.guardarApartado(apa);
+                    cargarTablaApartados();
+                    textField.setText("");
 
-                     if (ok) {
-                         JOptionPane.showMessageDialog(null, "Apartado guardado correctamente");
-                         cargarTablaApartados();
-                         textField.setText("");
-                       
-                     } else {
-                         JOptionPane.showMessageDialog(null, "Error al guardar apartado");
-                     }
-
-                 } catch (Exception ex) {
-                     JOptionPane.showMessageDialog(null, "Ingresa un monto válido");
-                 }
-             }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Ingresa un monto válido");
+                }	
+            }
          });
         btnguardar.setForeground(Color.WHITE);
         btnguardar.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -203,6 +217,25 @@ public class GUI_APARTADO extends JFrame {
         card.add(dateChooser);
         
         JButton btneditar = new JButton("Editar");
+        btneditar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		int fila = table.getSelectedRow();
+
+                if (fila == -1) {
+                    JOptionPane.showMessageDialog(null, "Selecciona un apartado para editar");
+                    return;
+                }
+
+                codigoEditando = table.getValueAt(fila, 0).toString();
+                String limite = table.getValueAt(fila, 1).toString().replace("$", "").trim();
+                String categoria = table.getValueAt(fila, 2).toString();
+
+                textField.setText(limite);
+                comboBox_categoria.setSelectedItem(categoria);
+                btnguardar.setText("Actualizar");
+            }
+        });
+
         btneditar.setForeground(Color.WHITE);
         btneditar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btneditar.setFocusPainted(false);
