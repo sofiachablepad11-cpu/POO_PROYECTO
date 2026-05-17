@@ -154,7 +154,7 @@ public class GUI_ALARMAS extends JFrame {
 	        }
 	    }
 
-	    // Alarma 4: limites por apartado (sin cambios)
+	    // Alarma 4: limites por apartado 
 	    LinkedList<Apartado> apartados    = ConsultasBD.getApartados(cod_use);
 	    LinkedList<Gasto>    listaGastos  = ConsultasBD.getGastos(cod_use);
 	    for (Apartado apa : apartados) {
