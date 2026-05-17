@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -237,8 +238,9 @@ public class GUI_GASTO extends JFrame {
         card.add(btn_eliminar);
  
         table_gas = new JTable();
-        table_gas.setBounds(8, 360, 282, 126);
-        card.add(table_gas);
+        JScrollPane scroll = new JScrollPane(table_gas);
+        scroll.setBounds(8, 360, 282, 126);
+        card.add(scroll);
  
         JButton btnvolver = new JButton("Volver al Inicio");
         btnvolver.addActionListener(new ActionListener() {
