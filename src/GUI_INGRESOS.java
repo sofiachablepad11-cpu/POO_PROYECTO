@@ -177,6 +177,7 @@ public class GUI_INGRESOS extends JFrame {
         
         dateChooser = new JDateChooser();
         dateChooser.setBounds(8, 59, 282, 18);
+        dateChooser.setDate(new java.util.Date());
         card.add(dateChooser);
 
        

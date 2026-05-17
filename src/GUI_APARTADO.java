@@ -243,6 +243,7 @@ public class GUI_APARTADO extends JFrame {
         
         dateChooser = new JDateChooser();
         dateChooser.setBounds(10, 58, 282, 18);
+        dateChooser.setDate(new java.util.Date());
         card.add(dateChooser);
     }
 }

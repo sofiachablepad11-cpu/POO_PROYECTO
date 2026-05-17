@@ -192,6 +192,7 @@ public class GUI_PRESUPUESTO extends JFrame {
         
         dateChooserInicio = new JDateChooser();
         dateChooserInicio.setBounds(10, 170, 282, 18);
+        dateChooserInicio.setDate(new java.util.Date());
         card.add(dateChooserInicio);
         
         JLabel lblNewLabel_1_1_1 = new JLabel("Fecha de corte");
@@ -202,6 +203,7 @@ public class GUI_PRESUPUESTO extends JFrame {
         dateChooserCorte = new JDateChooser();
         dateChooserCorte.setBounds(10, 220, 282, 18);
         card.add(dateChooserCorte);
+        
  
         actualizarDisponible();
     }
