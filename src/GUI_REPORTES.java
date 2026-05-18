@@ -164,6 +164,7 @@ public class GUI_REPORTES extends JFrame {
         btnVerDetalles.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnVerDetalles.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	dateChooser.setDate(null); 
             	cargarMovimientos();
                 actualizarTotales();   
             }
@@ -193,6 +194,12 @@ public class GUI_REPORTES extends JFrame {
         dateChooser = new JDateChooser();
         dateChooser.setBounds(10, 42, 295, 18);
         card.add(dateChooser);
+
+        dateChooser.addPropertyChangeListener("date", evt -> {
+            filtrarPorFecha();
+        });
+        
+       
 
         JLabel lblFecha = new JLabel("Fecha");
         lblFecha.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -313,6 +320,51 @@ public class GUI_REPORTES extends JFrame {
             modelo.addRow(new Object[]{
                 String.format("$ %.2f", g.getGas_monto()), "GASTO", g.getGas_fecha()
             });
+        }
+
+        table.setModel(modelo);
+    }
+    private void filtrarPorFecha() {
+        java.util.Date fechaUtil = dateChooser.getDate();
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Monto");
+        modelo.addColumn("Tipo");
+        modelo.addColumn("Fecha");
+
+        java.util.LinkedList<Ingreso> ingresos = ConsultasBD.getIngresos(cod_use);
+        java.util.LinkedList<Gasto> gastos = ConsultasBD.getGastos(cod_use);
+
+        if (fechaUtil == null) {
+           
+            for (Ingreso i : ingresos) {
+                modelo.addRow(new Object[]{
+                    String.format("$ %.2f", i.getIng_monto()), "INGRESO", i.getIng_fecha()
+                });
+            }
+            for (Gasto g : gastos) {
+                modelo.addRow(new Object[]{
+                    String.format("$ %.2f", g.getGas_monto()), "GASTO", g.getGas_fecha()
+                });
+            }
+        } else {
+        
+            java.sql.Date fechaFiltro = new java.sql.Date(fechaUtil.getTime());
+
+            for (Ingreso i : ingresos) {
+                if (i.getIng_fecha() != null && i.getIng_fecha().toString().equals(fechaFiltro.toString())) {
+                    modelo.addRow(new Object[]{
+                        String.format("$ %.2f", i.getIng_monto()), "INGRESO", i.getIng_fecha()
+                    });
+                }
+            }
+            for (Gasto g : gastos) {
+                if (g.getGas_fecha() != null && g.getGas_fecha().toString().equals(fechaFiltro.toString())) {
+                    modelo.addRow(new Object[]{
+                        String.format("$ %.2f", g.getGas_monto()), "GASTO", g.getGas_fecha()
+                    });
+                }
+            }
         }
 
         table.setModel(modelo);
