@@ -26,8 +26,10 @@ public class GUI_INGRESOS extends JFrame {
     private JTable table_ing;
     private String cod_use;
     private JDateChooser dateChooser;
+    
     private String codigoEditando = null; 
     private JPopupMenu popupMenu;
+    
     LocalDate hoy = LocalDate.now();
 
     public static void main(String[] args) {
