@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -37,6 +38,8 @@ public class GUI_GASTO extends JFrame {
     private String cod_use;
     private LinkedList<Apartado> listaApartados = new LinkedList<>();
 	
+    private JPopupMenu popupMenu;
+    private String codigoEditando = null;
 
 	/**
 	 * Launch the application.
@@ -116,7 +119,7 @@ public class GUI_GASTO extends JFrame {
         textField.setBounds(8, 219, 297, 25);
         card.add(textField);
  
-        JButton btnguardar = new JButton("Guardar");
+        final JButton btnguardar = new JButton("Guardar");
         btnguardar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	try {
@@ -131,21 +134,31 @@ public class GUI_GASTO extends JFrame {
                     }
                     java.sql.Date fecha = new java.sql.Date(fechaUtil.getTime());
 
-                    Gasto gas = new Gasto(null, cod_use, monto, categoria, descripcion, fecha, null);
-
-                    boolean ok = ConsultasBD.guardarGasto(gas);
-
-                    if (ok) {
-                        JOptionPane.showMessageDialog(null, "Gasto guardado correctamente");
-
-                        cargarTablaGastos(); 
-                        textingreso.setText("");
-                        textField.setText("");
+                    if (codigoEditando != null) {
                        
-                          
+                        ConsultasBD.eliminarGasto(codigoEditando);
+                        Gasto gas = new Gasto(null, cod_use, monto, categoria, descripcion, fecha, null);
+                        boolean ok = ConsultasBD.guardarGasto(gas);
+                        if (ok) {
+                            JOptionPane.showMessageDialog(null, "Gasto actualizado correctamente");
+                            codigoEditando = null;
+                            btnguardar.setText("Guardar");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error al actualizar gasto");
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Error al guardar gasto");
+                        Gasto gas = new Gasto(null, cod_use, monto, categoria, descripcion, fecha, null);
+                        boolean ok = ConsultasBD.guardarGasto(gas);
+                        if (ok) {
+                            JOptionPane.showMessageDialog(null, "Gasto guardado correctamente");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error al guardar gasto");
+                        }
                     }
+
+                    cargarTablaGastos();
+                    textingreso.setText("");
+                    textField.setText("");
 
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Ingresa un monto válido");
@@ -197,6 +210,88 @@ public class GUI_GASTO extends JFrame {
         JScrollPane scroll = new JScrollPane(table_gas);
         scroll.setBounds(8, 360, 297, 126);
         card.add(scroll);
+        
+     // POPUP MENU
+        popupMenu = new JPopupMenu();
+
+        
+        javax.swing.JMenuItem itemEliminar = new javax.swing.JMenuItem("Eliminar");
+        itemEliminar.setForeground(Color.RED);
+
+        itemEliminar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                int fila = table_gas.getSelectedRow();
+
+                if (fila == -1) {
+                    JOptionPane.showMessageDialog(null, "Selecciona un gasto");
+                    return;
+                }
+
+                String codigo = table_gas.getValueAt(fila, 0).toString();
+
+                boolean ok = ConsultasBD.eliminarGasto(codigo);
+
+                if (ok) {
+                    JOptionPane.showMessageDialog(null, "Gasto eliminado");
+                    cargarTablaGastos();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error al eliminar");
+                }
+            }
+        });
+
+       
+        javax.swing.JMenuItem itemEditar = new javax.swing.JMenuItem("Editar");
+        itemEditar.setForeground(new Color(0, 120, 215));
+
+        itemEditar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                int fila = table_gas.getSelectedRow();
+
+                if (fila == -1) {
+                    JOptionPane.showMessageDialog(null, "Selecciona un gasto para editar");
+                    return;
+                }
+
+                codigoEditando = table_gas.getValueAt(fila, 0).toString();
+
+                String monto = table_gas.getValueAt(fila, 1).toString().replace("$", "").trim();
+                String categoria = table_gas.getValueAt(fila, 2).toString();
+                String descripcion = table_gas.getValueAt(fila, 3).toString();
+
+                textingreso.setText(monto);
+                comboBox_categoria.setSelectedItem(categoria);
+                textField.setText(descripcion);
+
+                btnguardar.setText("Actualizar");
+            }
+        });
+
+        popupMenu.add(itemEditar);
+        popupMenu.add(itemEliminar);
+        
+        table_gas.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                if (e.isPopupTrigger()) mostrarPopup(e);
+            }
+
+            public void mouseReleased(java.awt.event.MouseEvent e) {
+                if (e.isPopupTrigger()) mostrarPopup(e);
+            }
+
+            private void mostrarPopup(java.awt.event.MouseEvent e) {
+
+                int fila = table_gas.rowAtPoint(e.getPoint());
+
+                if (fila >= 0) {
+                    table_gas.setRowSelectionInterval(fila, fila);
+                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
  
         JButton btnvolver = new JButton("Volver al Inicio");
         btnvolver.addActionListener(new ActionListener() {
@@ -220,6 +315,23 @@ public class GUI_GASTO extends JFrame {
         card.add(dateChooser);
         
         JButton btneditar = new JButton("Editar");
+        btneditar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int fila = table_gas.getSelectedRow();
+                if (fila == -1) {
+                    JOptionPane.showMessageDialog(null, "Selecciona un gasto para editar");
+                    return;
+                }
+                codigoEditando = table_gas.getValueAt(fila, 0).toString();
+                String monto = table_gas.getValueAt(fila, 1).toString().replace("$", "").trim();
+                String categoria = table_gas.getValueAt(fila, 2).toString();
+                String descripcion = table_gas.getValueAt(fila, 3).toString();
+                textingreso.setText(monto);
+                comboBox_categoria.setSelectedItem(categoria);
+                textField.setText(descripcion);
+                btnguardar.setText("Actualizar");
+            }
+        });
         btneditar.setForeground(Color.WHITE);
         btneditar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btneditar.setFocusPainted(false);

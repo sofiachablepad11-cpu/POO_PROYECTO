@@ -109,7 +109,7 @@ public class GUI_INGRESOS extends JFrame {
         		                boolean ok = ConsultasBD.guardarIngreso(ing);
         		                if (ok) {
         		                    JOptionPane.showMessageDialog(null, "Ingreso actualizado");
-        		                    codigoEditando = null; // reset
+        		                    codigoEditando = null; 
         		                    btnguardar.setText("Guardar");
         		                } else {
         		                    JOptionPane.showMessageDialog(null, "Error al actualizar");

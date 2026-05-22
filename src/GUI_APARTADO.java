@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -29,10 +30,10 @@ public class GUI_APARTADO extends JFrame {
     private JTextField textField;
     private JTable table;
     private String cod_use;
-    private DefaultTableModel modelo;
     private JComboBox comboBox_categoria;
     private JDateChooser dateChooser;
     private String codigoEditando = null;
+    private JPopupMenu popupMenu;
  
     LocalDate hoy = LocalDate.now();
 
@@ -105,7 +106,7 @@ public class GUI_APARTADO extends JFrame {
         comboBox_categoria.setBounds(10, 166, 282, 22);
         card.add(comboBox_categoria);
  
-        JButton btnguardar = new JButton("Guardar");
+        final JButton btnguardar = new JButton("Guardar");
         btnguardar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	try {
@@ -195,6 +196,66 @@ public class GUI_APARTADO extends JFrame {
         scroll.setBounds(10, 311, 282, 175);
         card.add(scroll);
 
+        // POPUP MENU
+        popupMenu = new JPopupMenu();
+
+        javax.swing.JMenuItem itemEliminar = new javax.swing.JMenuItem("Eliminar");
+        itemEliminar.setForeground(Color.RED);
+        itemEliminar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int fila = table.getSelectedRow();
+                if (fila == -1) {
+                    JOptionPane.showMessageDialog(null, "Selecciona un apartado");
+                    return;
+                }
+                String codigo = table.getValueAt(fila, 0).toString();
+                boolean ok = ConsultasBD.eliminarApartado(codigo);
+                if (ok) {
+                    JOptionPane.showMessageDialog(null, "Apartado eliminado");
+                    cargarTablaApartados();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error al eliminar");
+                }
+            }
+        });
+
+        javax.swing.JMenuItem itemEditar = new javax.swing.JMenuItem("Editar");
+        itemEditar.setForeground(new Color(0, 120, 215));
+        itemEditar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int fila = table.getSelectedRow();
+                if (fila == -1) {
+                    JOptionPane.showMessageDialog(null, "Selecciona un apartado para editar");
+                    return;
+                }
+                codigoEditando = table.getValueAt(fila, 0).toString();
+                String limite = table.getValueAt(fila, 1).toString().replace("$", "").replace(",", ".").trim();
+                String categoria = table.getValueAt(fila, 2).toString();
+                textField.setText(limite);
+                comboBox_categoria.setSelectedItem(categoria);
+                btnguardar.setText("Actualizar");
+            }
+        });
+
+        popupMenu.add(itemEditar);
+        popupMenu.add(itemEliminar);
+
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                if (e.isPopupTrigger()) mostrarPopup(e);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent e) {
+                if (e.isPopupTrigger()) mostrarPopup(e);
+            }
+            private void mostrarPopup(java.awt.event.MouseEvent e) {
+                int fila = table.rowAtPoint(e.getPoint());
+                if (fila >= 0) {
+                    table.setRowSelectionInterval(fila, fila);
+                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+
         JButton btnvolver = new JButton("Volver al Inicio");
         btnvolver.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -220,16 +281,13 @@ public class GUI_APARTADO extends JFrame {
         btneditar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		int fila = table.getSelectedRow();
-
                 if (fila == -1) {
                     JOptionPane.showMessageDialog(null, "Selecciona un apartado para editar");
                     return;
                 }
-
                 codigoEditando = table.getValueAt(fila, 0).toString();
-                String limite = table.getValueAt(fila, 1).toString().replace("$", "").trim();
+                String limite = table.getValueAt(fila, 1).toString().replace("$", "").replace(",", ".").trim();
                 String categoria = table.getValueAt(fila, 2).toString();
-
                 textField.setText(limite);
                 comboBox_categoria.setSelectedItem(categoria);
                 btnguardar.setText("Actualizar");
@@ -269,4 +327,3 @@ public class GUI_APARTADO extends JFrame {
 	    table.getColumnModel().getColumn(0).setMaxWidth(0);
 	}
 }
- 
